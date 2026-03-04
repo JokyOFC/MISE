@@ -1,26 +1,20 @@
-<script setup lang="ts">
-
-  import Header from './components/Header.vue';
-
-</script>
-
 <template>
-  <div>
-    <Header></Header>
-  </div>
+  <router-view />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+#app {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #0b0b0b;
 }
 </style>

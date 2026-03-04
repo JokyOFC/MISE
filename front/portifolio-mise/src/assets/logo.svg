@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 60" width="300" height="60">
+  <style>
+    text {
+      font-family: 'Fira Code', 'Roboto Mono', monospace, sans-serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+  </style>
+  
+  <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-size="36">
+    &gt; Joky<tspan fill="#0F4C5C">_</tspan>
+  </text>
+</svg>
