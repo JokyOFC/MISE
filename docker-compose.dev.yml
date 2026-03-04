@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./front/portifolio-mise
+      dockerfile: Dockerfile.dev
+    container_name: mise-frontend-dev
+    ports:
+      - "5173:5173"  # Vite dev server port
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./front/portifolio-mise:/app
+      - /app/node_modules
+    networks:
+      - mise-network
+    depends_on:
+      - strapi
+
+  strapi:
+    build:
+      context: ./services/strapi
+      dockerfile: Dockerfile
+    container_name: mise-strapi
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_CLIENT=sqlite
+      - DATABASE_FILENAME=.tmp/data.db
+      - HOST=0.0.0.0
+      - PORT=1337
+      - APP_KEYS=${APP_KEYS:-toBeModified1,toBeModified2,toBeModified3,toBeModified4}
+      - API_TOKEN_SALT=${API_TOKEN_SALT:-toBeModified}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET:-toBeModified}
+      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT:-toBeModified}
+      - JWT_SECRET=${JWT_SECRET:-toBeModified}
+    volumes:
+      - strapi-data:/app/.tmp
+      - strapi-uploads:/app/public/uploads
+    networks:
+      - mise-network
+
+volumes:
+  strapi-data:
+    driver: local
+  strapi-uploads:
+    driver: local
+
+networks:
+  mise-network:
+    driver: bridge

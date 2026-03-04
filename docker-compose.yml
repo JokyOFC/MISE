@@ -1,0 +1,72 @@
+services:
+  frontend:
+    build:
+      context: ./front/portifolio-mise
+      dockerfile: Dockerfile
+    container_name: mise-frontend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - mise-network
+    depends_on:
+      - strapi
+
+  strapi:
+    build:
+      context: ./services/strapi
+      dockerfile: Dockerfile
+    container_name: mise-strapi
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_CLIENT=sqlite
+      - DATABASE_FILENAME=.tmp/data.db
+      - HOST=0.0.0.0
+      - PORT=1337
+      - APP_KEYS=${APP_KEYS:-toBeModified1,toBeModified2,toBeModified3,toBeModified4}
+      - API_TOKEN_SALT=${API_TOKEN_SALT:-toBeModified}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET:-toBeModified}
+      - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT:-toBeModified}
+      - JWT_SECRET=${JWT_SECRET:-toBeModified}
+    volumes:
+      - strapi-data:/app/.tmp
+      - strapi-uploads:/app/public/uploads
+    networks:
+      - mise-network
+
+  nginx-ui:
+    stdin_open: true
+    tty: true
+    container_name: nginx-ui
+    restart: always
+    environment:
+        - TZ=America/Sao_Paulo
+    volumes:
+        - nginx-config:/etc/nginx
+        - nginx-ui-data:/etc/nginx-ui
+        - nginx-www:/var/www
+    ports:
+        - 8080:80
+        - 8443:443
+    image: 'uozi/nginx-ui:latest'
+
+volumes:
+  strapi-data:
+    driver: local
+  strapi-uploads:
+    driver: local
+  nginx-config:
+    driver: local 
+  nginx-ui-data:
+    driver: local
+  nginx-www:
+    driver: local
+
+networks:
+  mise-network:
+    driver: bridge
