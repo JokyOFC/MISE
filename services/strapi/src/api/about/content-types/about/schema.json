@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "abouts",
+  "info": {
+    "singularName": "about",
+    "pluralName": "abouts",
+    "displayName": "Sobre",
+    "description": "Seção Sobre mim (título, parágrafos, card de perfil)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "paragraphs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "about.paragraph"
+    },
+    "profile": {
+      "type": "component",
+      "repeatable": false,
+      "component": "about.profile"
+    }
+  }
+}

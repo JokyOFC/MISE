@@ -27,9 +27,9 @@ RUN npm run build
 RUN mkdir -p public/uploads .tmp && \
     chown -R strapi:nodejs /app
 
-# Copy and set permissions for entrypoint script
+# Copy and set permissions for entrypoint script (strip CRLF para evitar "No such file or directory")
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 1337
 

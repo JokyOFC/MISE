@@ -1,0 +1,27 @@
+# Strapi em modo desenvolvimento: sem build de produção, código vem do volume
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Dependências para native modules (better-sqlite3, etc.)
+RUN apk add --no-cache python3 make g++
+
+# Apenas package files; o resto do código será montado via volume
+COPY package.json package-lock.json* ./
+RUN npm install && npm cache clean --force
+
+# Diretórios que o Strapi precisa (serão sobrescritos pelo volume, mas existem na imagem)
+RUN mkdir -p src public .tmp
+
+# Entrypoint que instala deps (se necessário) e roda strapi develop
+COPY docker-entrypoint-dev.sh /usr/local/bin/
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint-dev.sh 2>/dev/null || true && \
+    chmod +x /usr/local/bin/docker-entrypoint-dev.sh
+
+EXPOSE 1337
+
+ENV NODE_ENV=development
+
+# Sem usuário restrito em dev para evitar conflito de permissão no volume montado
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-dev.sh"]
+CMD ["npm", "run", "develop"]

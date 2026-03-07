@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="pc-content">
+        <div class="pc-content pc-details-content">
           <div class="pc-details">
             <h3>{{ name }}</h3>
 
@@ -563,6 +563,7 @@ onUnmounted(() => {
 .pc-avatar-content {
   mix-blend-mode: screen;
   overflow: hidden;
+  z-index: 6;
 }
 
 .pc-avatar-content .avatar {
@@ -570,7 +571,7 @@ onUnmounted(() => {
   position: absolute;
   left: 50%;
   transform: translateX(-50%) scale(1);
-  bottom: 2px;
+  /* bottom: 2px; */
   opacity: calc(1.75 - var(--pointer-from-center));
 }
 
@@ -682,10 +683,15 @@ onUnmounted(() => {
   mix-blend-mode: luminosity;
 }
 
+.pc-content.pc-details-content {
+  z-index: 2;
+}
+
 .pc-details {
   width: 100%;
   position: absolute;
-  top: 3em;
+  top: 7.3em;
+  right: 3.5em;
   display: flex;
   flex-direction: column;
 }

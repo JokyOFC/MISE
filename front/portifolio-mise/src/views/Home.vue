@@ -1,15 +1,21 @@
 <script setup lang="ts">
-  import { onMounted, onUnmounted } from 'vue';
+  import { computed, onMounted, onUnmounted } from 'vue';
   import Header from '../components/Header.vue';
   import StaggeredMenu from '../components/StaggeredMenu/StaggeredMenu.vue';
   import logoUrl from '../assets/logo.svg';
   import About from '../components/About.vue';
   import Projects from '../components/Projects.vue';
-  
+  import Experiences from '../components/Experiences.vue';
+  import Footer from '../components/Footer.vue';
+  import { useFooter } from '../composables/useStrapiData';
+
+  const { config: footerConfig } = useFooter();
+
   const menuItems = [
     { label: 'Inicio', ariaLabel: 'Go to home page', link: '#inicio' },
     { label: 'Sobre', ariaLabel: 'Learn about us', link: '#sobre' },
     { label: 'Projetos', ariaLabel: 'View our services', link: '#projetos' },
+    { label: 'Experiências', ariaLabel: 'View professional experiences', link: '#experiencias' },
     { label: 'Contato', ariaLabel: 'Get in touch', link: '#contato' }
   ]
   
@@ -41,11 +47,12 @@
     }
   };
 
-  const socialItems = [
-    { label: 'Twitter', link: 'https://twitter.com' },
-    { label: 'GitHub', link: 'https://github.com' },
-    { label: 'LinkedIn', link: 'https://linkedin.com' }
-  ]
+  const socialItems = computed(() =>
+    (footerConfig.value.socialLinks || []).map((link) => ({
+      label: link.label,
+      link: link.url
+    }))
+  );
 
   const handleMenuOpen = () => console.log('Menu opened')
   const handleMenuClose = () => console.log('Menu closed')
@@ -85,6 +92,12 @@
    <div id="projetos" class="projects-wrapper">
       <Projects />
    </div>
+   <div id="experiencias" class="experiences-wrapper">
+      <Experiences />
+   </div>
+   <div id="contato" class="footer-wrapper">
+      <Footer />
+   </div>
  </div>
 </template>
 
@@ -93,7 +106,7 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: 300vh;
+  min-height: 100vh;
   overflow-x: hidden;
   overflow-y: visible;
 }
@@ -122,9 +135,7 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  height: 100vh;
   min-height: 100vh;
-  max-height: 100vh;
   z-index: 2;
   background-color: #0b0b0b;
   overflow: visible;
@@ -144,5 +155,37 @@
   overflow: visible;
   scroll-snap-align: center;
   scroll-snap-stop: always;
+}
+
+.experiences-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  z-index: 2;
+  background-color: #000;
+  overflow: visible;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.how-can-i-help-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  z-index: 2;
+  background-color: #0b0b0b;
+  overflow: visible;
+}
+
+.footer-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  z-index: 2;
+  background-color: #0b0b0b;
+  padding: 4rem 0 2rem;
+  overflow: visible;
 }
 </style>

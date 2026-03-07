@@ -1,0 +1,17 @@
+{
+  "title": "SOBRE MIM",
+  "paragraphs": [
+    { "content": "Sou <strong>Engenheiro de Software Fullstack</strong> com formação em Ciência da Computação e mais de 4 anos de experiência no desenvolvimento de soluções escaláveis e de alto desempenho.", "highlight": false },
+    { "content": "Ao longo da minha trajetória, atuei na construção de aplicações web, sistemas backend robustos, interfaces frontend modernas e aplicações mobile, sempre com foco em arquitetura bem estruturada, código limpo e performance. Tenho experiência no desenvolvimento de sistemas completos, desde a modelagem da regra de negócio até a entrega da interface final ao usuário.", "highlight": false },
+    { "content": "Trabalho com mentalidade orientada a produto, priorizando escalabilidade, manutenibilidade e boas práticas de engenharia, como Clean Architecture, testes automatizados e padrões sólidos de desenvolvimento.", "highlight": false },
+    { "content": "Sou apaixonado por tecnologia e movido pela curiosidade. Estou sempre explorando novas ferramentas, estudando tendências do mercado e buscando evoluir tecnicamente para criar soluções cada vez mais eficientes e inovadoras.", "highlight": false },
+    { "content": "Meu objetivo é transformar ideias em produtos digitais bem estruturados, performáticos e prontos para crescer.", "highlight": true }
+  ],
+  "profile": {
+    "name": "Joaquim E.",
+    "title": "Software Engineer",
+    "handle": "JokyOFC",
+    "status": "Online",
+    "contactText": "Github"
+  }
+}

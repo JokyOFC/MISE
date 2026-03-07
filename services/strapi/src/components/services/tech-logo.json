@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_services_tech_logos",
+  "info": {
+    "displayName": "Tech logo",
+    "description": "Tecnologia (ícone, título, link)"
+  },
+  "options": {},
+  "attributes": {
+    "icon": {
+      "type": "string",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "href": {
+      "type": "string"
+    }
+  }
+}

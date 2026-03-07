@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_home_header_buttons",
+  "info": {
+    "displayName": "Botão do header",
+    "description": "Botão do hero (Saiba mais, Entre em contato, Baixar CV)"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}

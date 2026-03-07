@@ -1,0 +1,35 @@
+{
+  "kind": "singleType",
+  "collectionName": "how_can_i_help",
+  "info": {
+    "singularName": "how-can-i-help",
+    "pluralName": "how-can-i-helps",
+    "displayName": "Como posso ajudar",
+    "description": "Seção de serviços e tecnologias do portfólio"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "Como posso ajudar"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "techLogos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "services.tech-logo"
+    },
+    "services": {
+      "type": "component",
+      "repeatable": true,
+      "component": "services.service-item"
+    }
+  }
+}

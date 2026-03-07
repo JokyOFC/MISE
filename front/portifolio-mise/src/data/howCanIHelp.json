@@ -1,0 +1,43 @@
+{
+  "intro": {
+    "title": "Como posso ajudar",
+    "description": "Ofereço soluções completas em desenvolvimento de software, desde a concepção até a entrega e manutenção. Trabalho com as principais tecnologias do mercado para criar aplicações modernas, performáticas e fáceis de manter."
+  },
+  "techLogos": [
+    { "icon": "pi pi-code", "title": "Vue.js", "href": "https://vuejs.org" },
+    { "icon": "pi pi-desktop", "title": "React", "href": "https://react.dev" },
+    { "icon": "pi pi-server", "title": "Node.js", "href": "https://nodejs.org" },
+    { "icon": "pi pi-database", "title": "PostgreSQL", "href": "https://www.postgresql.org" },
+    { "icon": "pi pi-box", "title": "Docker", "href": "https://www.docker.com" },
+    { "icon": "pi pi-palette", "title": "Figma", "href": "https://www.figma.com" },
+    { "icon": "pi pi-bolt", "title": "TypeScript", "href": "https://www.typescriptlang.org" },
+    { "icon": "pi pi-cloud", "title": "APIs REST", "href": null }
+  ],
+  "services": [
+    {
+      "title": "Desenvolvimento Web",
+      "description": "Criação de sites e aplicações web responsivas, acessíveis e otimizadas. Uso de frameworks modernos como Vue e React para entregar interfaces rápidas e uma ótima experiência ao usuário.",
+      "icon": "pi pi-globe"
+    },
+    {
+      "title": "Manutenção em Sistemas",
+      "description": "Correção de bugs, refatoração de código legado e evolução contínua de sistemas já em produção. Garantia de estabilidade e melhoria gradual sem interromper o negócio.",
+      "icon": "pi pi-wrench"
+    },
+    {
+      "title": "Deploy de Aplicações",
+      "description": "Configuração de ambientes de homologação e produção, pipelines de CI/CD e uso de containers (Docker) e clouds para colocar sua aplicação no ar com segurança e escalabilidade.",
+      "icon": "pi pi-cloud-upload"
+    },
+    {
+      "title": "Design de Interfaces",
+      "description": "Prototipação e design de interfaces alinhados ao seu produto. Trabalho em conjunto com ferramentas como Figma para definir fluxos, componentes e identidade visual antes do desenvolvimento.",
+      "icon": "pi pi-palette"
+    },
+    {
+      "title": "APIs e Integrações",
+      "description": "Desenvolvimento de APIs REST ou GraphQL e integração entre sistemas. Documentação clara e boas práticas para que sua aplicação se comunique de forma confiável com outros serviços.",
+      "icon": "pi pi-link"
+    }
+  ]
+}

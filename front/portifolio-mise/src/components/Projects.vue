@@ -3,52 +3,38 @@
     import { gsap } from 'gsap';
     import CardSwap from './CardSwap/CardSwap.vue';
     import AnimatedContent from './AnimatedContent/AnimatedContent.vue';
-    
-    // Importar imagens dos projetos
+    import { useProjects } from '../composables/useStrapiData';
+
     import project1Image from '../assets/projects/project_1.png';
-    // Adicione mais imports conforme necessário:
-    // import project2Image from '../assets/projects/project_2.png';
-    // import project3Image from '../assets/projects/project_3.png';
+    import project2Image from '../assets/projects/project_2.png';
+    import project3Image from '../assets/projects/project_3.png';
 
-    interface Project {
-        id: number;
-        name: string;
-        description: string;
-        image: string;
-        icon: string;
-    }
-
-    const projects: Project[] = [
-        {
-            id: 1,
-            name: 'Projeto 1',
-            description: 'Descrição do primeiro projeto. Uma solução inovadora que resolve problemas complexos com tecnologia de ponta.',
-            image: project1Image,
-            icon: 'pi pi-circle-fill'
-        },
-        {
-            id: 2,
-            name: 'Projeto 2',
-            description: 'Descrição do segundo projeto. Uma plataforma moderna desenvolvida com as melhores práticas de desenvolvimento.',
-            image: project1Image, // Substitua por project2Image quando tiver a imagem
-            icon: 'pi pi-code'
-        },
-        {
-            id: 3,
-            name: 'Projeto 3',
-            description: 'Descrição do terceiro projeto. Uma aplicação web responsiva com foco em experiência do usuário.',
-            image: project1Image, // Substitua por project3Image quando tiver a imagem
-            icon: 'pi pi-sliders-h'
-        }
-    ];
+    const defaultImages = [project1Image, project2Image, project3Image];
+    const { projects } = useProjects();
+    const projectsWithImages = computed(() =>
+        projects.value.map((p, i) => ({
+            ...p,
+            image: p.image || defaultImages[i] || ''
+        }))
+    );
 
     // Estado para rastrear qual projeto está na frente (índice na ordem do CardSwap)
     const currentProjectIndex = ref(0);
     const isInitialized = ref(false);
     
-    // Refs para animação do título e descrição
+    // Refs para animação do título, descrição e pastilhas
     const titleRef = useTemplateRef<HTMLParagraphElement>('titleRef');
     const descriptionRef = useTemplateRef<HTMLParagraphElement>('descriptionRef');
+    const technologiesRef = useTemplateRef<HTMLDivElement>('technologiesRef');
+
+    // Proporção de cada imagem (width/height) para o card acompanhar e evitar faixas
+    const imageAspect = ref<Record<number, number>>({});
+    const onImageLoad = (e: Event, projectId: number) => {
+        const img = e.target as HTMLImageElement;
+        if (img?.naturalWidth && img?.naturalHeight) {
+            imageAspect.value = { ...imageAspect.value, [projectId]: img.naturalWidth / img.naturalHeight };
+        }
+    };
 
     const handleComplete = () => {
         console.log("Animation completed!");
@@ -77,8 +63,10 @@
         }
         
         // Anima a saída do conteúdo atual (mais rápida)
-        if (titleRef.value && descriptionRef.value) {
-            gsap.to([titleRef.value, descriptionRef.value], {
+        const animOut = [titleRef.value, descriptionRef.value];
+        if (technologiesRef.value) animOut.push(technologiesRef.value);
+        if (animOut.length) {
+            gsap.to(animOut, {
                 opacity: 0,
                 y: -20,
                 duration: 0.3,
@@ -96,13 +84,15 @@
         await nextTick();
 
         // Anima a entrada do novo conteúdo (mais rápida e simultânea)
-        if (titleRef.value && descriptionRef.value) {
-            gsap.set([titleRef.value, descriptionRef.value], {
+        const animIn = [titleRef.value, descriptionRef.value];
+        if (technologiesRef.value) animIn.push(technologiesRef.value);
+        if (animIn.length) {
+            gsap.set(animIn, {
                 opacity: 0,
                 y: 15
             });
             
-            gsap.to([titleRef.value, descriptionRef.value], {
+            gsap.to(animIn, {
                 opacity: 1,
                 y: 0,
                 duration: 0.3,
@@ -112,19 +102,18 @@
         }
     };
 
-    // Projeto atual baseado no índice
     const currentProject = computed(() => {
-        return projects[currentProjectIndex.value] || projects[0];
+        const list = projectsWithImages.value;
+        return list[currentProjectIndex.value] || list[0];
     });
 
     onMounted(() => {
         // Inicializa a animação do título e descrição
         nextTick(() => {
-            if (titleRef.value && descriptionRef.value) {
-                gsap.set([titleRef.value, descriptionRef.value], {
-                    opacity: 1,
-                    y: 0
-                });
+            const els = [titleRef.value, descriptionRef.value];
+            if (technologiesRef.value) els.push(technologiesRef.value);
+            if (els.length) {
+                gsap.set(els, { opacity: 1, y: 0 });
             }
         });
     });
@@ -152,8 +141,18 @@
     <div class="projects-description">
         <p ref="titleRef" class="projects-description-title">{{ currentProject?.name.toUpperCase() }}</p>
         <p ref="descriptionRef" class="projects-description-text">{{ currentProject?.description }}</p>
+        <div ref="technologiesRef" class="projects-technologies">
+            <span
+                v-for="tech in (currentProject?.technologies ?? [])"
+                :key="tech"
+                class="technology-pill"
+            >
+                {{ tech }}
+            </span>
+        </div>
     </div>
   <div class="projects-container">
+      <div class="projects-cards-offset">
       <CardSwap 
       :card-distance="60"
       :vertical-distance="70"
@@ -163,10 +162,10 @@
       :pause-on-hover="true"
       @card-click="handleCardClick"
       @order-changed="handleOrderChanged"
-      :width="900"
-      :height="800"
+      :width="1100"
+      :height="600"
     >
-    <template v-for="(project, index) in projects" :key="project.id" #[`card-${index}`]>
+    <template v-for="(project, index) in projectsWithImages" :key="project.id" #[`card-${index}`]>
       <div class="card-wrapper">
         <div class="card-header">
           <div class="card-inner">
@@ -174,34 +173,52 @@
             <span>{{ project.name.toUpperCase() }}</span>
           </div>
         </div>
-        <div class="card-body">
-          <img :src="project.image" :alt="project.name" class="project-image" />
+        <div
+          class="card-body"
+          :style="imageAspect[project.id] ? { aspectRatio: String(imageAspect[project.id]) } : undefined"
+        >
+          <img
+            :src="project.image"
+            :alt="project.name"
+            class="project-image"
+            @load="onImageLoad($event, project.id)"
+          />
         </div>
       </div>
     </template>
     </CardSwap>
+      </div>
   </div>
 </template>
 
 <style scoped>
 .projects-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3em 5em;
+  padding: 2em 3em;
   box-sizing: border-box;
   overflow: hidden;
   position: absolute;
+  inset: 0;
   z-index: 10;
+}
+
+.projects-cards-offset {
+  transform: translateY(40vh) translateX(53vw);
 }
 
 .card-wrapper {
   width: 100%;
-  height: 100%;
+  height: auto;
+  max-height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  align-self: center;
 }
 
 .card-header {
@@ -224,18 +241,21 @@
 .card-body {
   position: relative;
   padding: 0.5rem;
-  flex: 1;
+  width: 100%;
+  flex: none;
   overflow: hidden;
   border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  aspect-ratio: 16 / 9;
 }
 
 .project-image {
+  display: block;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   object-fit: cover;
+  object-position: center;
   border-radius: 10px;
 }
 
@@ -248,11 +268,12 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  padding-top: 13vh;
+  padding-top: clamp(2rem, 10vh, 13vh);
+  pointer-events: none;
 }
 
 .projects-title span {
-  font-size: 4rem;
+  font-size: clamp(1.75rem, 5vw, 4rem);
   font-weight: 600;
   color: white;
 }
@@ -261,25 +282,138 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 40%;
+  width: 38%;
+  max-width: 520px;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
-  padding-left: 9rem;
+  gap: 0.75rem 1rem;
+  padding: 2rem 0 2rem clamp(2rem, 6vw, 9rem);
 }
 
 .projects-description-title {
-  font-size: 2rem;
+  font-size: clamp(1.1rem, 2vw, 2rem);
   font-weight: 600;
   color: white;
+  line-height: 1.25;
 }
 
 .projects-description-text {
-  font-size: 1.2rem;
+  font-size: clamp(0.875rem, 1.2vw, 1.2rem);
   font-weight: 400;
   color: white;
+  line-height: 1.5;
+}
+
+.projects-technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.technology-pill {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+  font-weight: 500;
+  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.technology-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .projects-container {
+    padding: 1.5em 2em;
+  }
+
+  .projects-description {
+    width: 42%;
+    padding-left: clamp(1.5rem, 4vw, 4rem);
+  }
+}
+
+/* Mobile landscape / tablet portrait */
+@media (max-width: 768px) {
+  .projects-container {
+    padding: 1.25em 1.5em;
+  }
+
+  .projects-title {
+    padding-top: 1.5rem;
+  }
+
+  .projects-description {
+    width: 55%;
+    max-width: none;
+    padding: 1.5rem 0 1.5rem 1.5rem;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .projects-description-title {
+    font-size: 1.05rem;
+  }
+
+  .projects-description-text {
+    font-size: 0.875rem;
+  }
+
+  .technology-pill {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .projects-container {
+    padding: 1em 1rem;
+    align-items: flex-end;
+  }
+
+  .projects-title {
+    padding-top: 1rem;
+  }
+
+  .projects-title span {
+    font-size: 1.5rem;
+  }
+
+  .projects-description {
+    width: 100%;
+    max-width: none;
+    padding: 1rem 1rem 1.5rem;
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+    gap: 0.4rem 0.6rem;
+  }
+
+  .projects-description-title {
+    font-size: 1rem;
+  }
+
+  .projects-description-text {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+
+  .projects-technologies {
+    gap: 0.35rem;
+  }
+
+  .technology-pill {
+    font-size: 0.7rem;
+    padding: 0.18rem 0.45rem;
+  }
 }
 
 </style>

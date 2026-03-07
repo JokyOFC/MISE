@@ -17,4 +17,14 @@
   padding: 0;
   background-color: #0b0b0b;
 }
+
+::selection {
+  background-color: #0F4C5C;
+  color: #fff;
+}
+
+::-moz-selection {
+  background-color: #0F4C5C;
+  color: #fff;
+}
 </style>

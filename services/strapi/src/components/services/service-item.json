@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_services_service_items",
+  "info": {
+    "displayName": "Serviço",
+    "description": "Item de serviço (título, descrição, ícone)"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "icon": {
+      "type": "string",
+      "required": true,
+      "default": "pi pi-globe"
+    }
+  }
+}

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -22,13 +20,13 @@ services:
   strapi:
     build:
       context: ./services/strapi
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: mise-strapi
     ports:
       - "1337:1337"
     restart: unless-stopped
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DATABASE_CLIENT=sqlite
       - DATABASE_FILENAME=.tmp/data.db
       - HOST=0.0.0.0
@@ -38,7 +36,12 @@ services:
       - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET:-toBeModified}
       - TRANSFER_TOKEN_SALT=${TRANSFER_TOKEN_SALT:-toBeModified}
       - JWT_SECRET=${JWT_SECRET:-toBeModified}
+      # File watching no Windows (bind mount não propaga inotify)
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    command: ["npm", "run", "develop"]
     volumes:
+      - ./services/strapi:/app
       - strapi-data:/app/.tmp
       - strapi-uploads:/app/public/uploads
     networks:

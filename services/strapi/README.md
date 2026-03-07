@@ -2,6 +2,50 @@
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
 
+## Integração com o portfólio (MISE)
+
+Este Strapi alimenta **todas as seções** do frontend. Os dados são editáveis pelo **Content Manager** e usam **componentes** para estruturas repetíveis (parágrafos, botões, serviços, etc.).
+
+### Content types
+
+| API | Tipo | Uso no front |
+|-----|------|--------------|
+| **header** | Single | Hero (nome, textos rotativos, títulos, tagline, botões) |
+| **about** | Single | Sobre mim (título, parágrafos, card de perfil com avatar) |
+| **project** | Collection | Projetos (nome, descrição, imagem, ícone, tecnologias) |
+| **experience** | Collection | Experiências profissionais |
+| **how-can-i-help** | Single | Como posso ajudar (título, descrição, tech logos, serviços) |
+| **footer** | Single | Rodapé (links sociais, CTA, copyright) |
+
+### Componentes (editáveis no GUI)
+
+- **home.rotating-text** – Texto que alterna no header
+- **home.header-button** – Botão do hero (label + URL)
+- **about.paragraph** – Parágrafo (conteúdo + destaque)
+- **about.profile** – Perfil (nome, título, handle, status, avatar, ícone, grain)
+- **services.service-item** – Serviço (título, descrição, ícone)
+- **services.tech-logo** – Tech logo (ícone, título, href)
+- **footer.social-link** – Link social (id, label, url)
+- **shared.link** – Link genérico (label, url)
+
+Imagens (avatar, ícone, grain, imagens dos projetos) são gerenciadas pela **Media Library** do Strapi.
+
+### Permissões para a API pública
+
+1. Acesse o admin: `http://localhost:1337/admin`
+2. Crie um usuário admin na primeira execução (se pedido).
+3. Vá em **Settings → Users & Permissions → Roles → Public**.
+4. Em **Permissions**, marque para cada content type:
+   - **Header**: `find`
+   - **About**: `find`
+   - **Project**: `find`, `findOne`
+   - **Experience**: `find`, `findOne`
+   - **How-can-i-help**: `find`
+   - **Footer**: `find`
+5. Salve.
+
+Assim o frontend consegue ler os dados sem token. Para produção, considere usar um **API Token** (Settings → API Tokens) e enviar no header `Authorization: Bearer <token>`.
+
 ### `develop`
 
 Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)

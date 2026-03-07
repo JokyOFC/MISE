@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_home_rotating_texts",
+  "info": {
+    "displayName": "Texto rotativo",
+    "description": "Um texto que alterna no header (ex: formação, localização)"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

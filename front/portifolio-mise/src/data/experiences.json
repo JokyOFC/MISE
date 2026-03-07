@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "company": "63.340.182 JOAQUIM JULIAO RAMOS ESTEVES FILHO",
+    "role": "Freelancer",
+    "period": "2025 - Atual",
+    "location": "Remoto",
+    "description": "Responsável pelo desenvolvimento de interfaces responsivas, animações e integração com APIs REST em projetos de alto impacto.",
+    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP"]
+  },
+  {
+    "id": 1,
+    "company": "Metta Software House",
+    "role": "Engenheiro de Software",
+    "period": "2025 - Atual",
+    "location": "Remoto",
+    "description": "Responsável pelo desenvolvimento de interfaces responsivas, animações e integração com APIs REST em projetos de alto impacto.",
+    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP"]
+  },
+  {
+    "id": 2,
+    "company": "SGN Sistemas",
+    "role": "Engenheiro de Software",
+    "period": "set de 2023 - ago de 2024",
+    "location": "Salvador, BA - Hibrido",
+    "description": "Atuação em aplicações web completas e Mobile, desde a modelagem de banco de dados até a camada de apresentação.",
+    "technologies": ["Node.js", "React Native", "Android", "iOS", "React", "Express", "PHP", "MySQL", "SQL Server", "Shadcn", "Tailwind", "Git", "Docker"]
+  },
+  {
+    "id": 3,
+    "company": "SGN Sistemas",
+    "role": "Estagiário",
+    "period": "abr de 2022 - set de 2023",
+    "location": "Salvador, BA",
+    "description": "Implementação de melhorias em sistemas internos, garantindo maior eficiência no fluxo de trabalho.",
+    "technologies": ["Centura", "SQL Server", "Git"]
+  }
+]

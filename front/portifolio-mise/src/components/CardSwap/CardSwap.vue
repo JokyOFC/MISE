@@ -93,6 +93,8 @@ const cardRefs = ref<HTMLElement[]>([]);
 const order = ref<number[]>([0, 1, 2]);
 const tlRef = ref<gsap.core.Timeline | null>(null);
 const intervalRef = ref<number>();
+/** Enquanto true, hover não deve matar/reiniciar animação (evita bug ao clicar com mouse em cima) */
+const isBringingCardToFront = ref(false);
 
 const bringCardToFront = (targetIndex: number) => {
   const currentIndex = order.value.indexOf(targetIndex);
@@ -100,24 +102,35 @@ const bringCardToFront = (targetIndex: number) => {
   // Se o card já está na frente, não faz nada
   if (currentIndex === 0) return;
   
-  // Para a animação automática temporariamente
+  // Para a animação automática; depois protege a nova timeline do hover
   stopAnimation();
+  isBringingCardToFront.value = true;
   
   // Reorganiza a ordem: move o card clicado para frente
   const newOrder = [...order.value];
   newOrder.splice(currentIndex, 1);
   newOrder.unshift(targetIndex);
   
+  const total = cardRefs.value.length;
+  
+  // Define z-index de todos os cards IMEDIATAMENTE para o card clicado vir sempre à frente
+  // (evita bug em que às vezes o card não vinha totalmente à frente por depender da timeline)
+  newOrder.forEach((idx, i) => {
+    const el = cardRefs.value[idx];
+    if (!el) return;
+    const slot = makeSlot(i, props.cardDistance, props.verticalDistance, total);
+    gsap.set(el, { zIndex: slot.zIndex });
+  });
+  
   const tl = gsap.timeline();
   tlRef.value = tl;
   
-  // Anima todos os cards para suas novas posições
+  // Anima apenas a posição (x, y, z); z-index já foi aplicado acima
   newOrder.forEach((idx, i) => {
     const el = cardRefs.value[idx];
     if (!el) return;
     
-    const slot = makeSlot(i, props.cardDistance, props.verticalDistance, cardRefs.value.length);
-    tl.set(el, { zIndex: slot.zIndex }, i === 0 ? 0 : `-=${0.1}`);
+    const slot = makeSlot(i, props.cardDistance, props.verticalDistance, total);
     tl.to(
       el,
       {
@@ -137,6 +150,7 @@ const bringCardToFront = (targetIndex: number) => {
     if (frontIndex !== undefined) {
       emit('order-changed', frontIndex);
     }
+    isBringingCardToFront.value = false;
     // Reinicia a animação automática após a animação terminar
     setTimeout(() => {
       startAnimation();
@@ -283,6 +297,8 @@ const startAnimation = () => {
 };
 
 const stopAnimation = () => {
+  // Não interromper a animação de "trazer card para frente" ao passar o mouse
+  if (isBringingCardToFront.value) return;
   tlRef.value?.kill();
   if (intervalRef.value) {
     clearInterval(intervalRef.value);
@@ -290,6 +306,8 @@ const stopAnimation = () => {
 };
 
 const resumeAnimation = () => {
+  // Não reiniciar auto-rotate enquanto o usuário está trazendo um card para frente
+  if (isBringingCardToFront.value) return;
   tlRef.value?.play();
   intervalRef.value = window.setInterval(swap, props.delay);
 };

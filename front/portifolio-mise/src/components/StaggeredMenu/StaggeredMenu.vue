@@ -19,57 +19,70 @@
         />
       </div>
 
+      <div
+        class="staggered-menu-header__backdrop"
+        :class="{ 'staggered-menu-header--blur': headerScrolled }"
+        :style="headerScrolled ? headerBlurStyle : headerTransparentStyle"
+        aria-hidden="true"
+      />
+
       <header
-        class="top-0 left-0 z-20 absolute flex justify-between items-center bg-transparent p-[3em] w-full pointer-events-none staggered-menu-header"
+        class="top-0 left-0 z-20 absolute flex justify-between items-center p-[3em] w-full pointer-events-none staggered-menu-header"
         aria-label="Main navigation header"
       >
-        <div class="flex items-center pointer-events-auto select-none sm-logo" aria-label="Logo">
-          <img
-            :src="logoUrl || defaultLogoUrl"
-            alt="Logo"
-            class="block w-auto h-8 object-contain sm-logo-img"
-            :draggable="false"
-            width="110"
-            height="24"
-          />
-        </div>
-
-        <button
-          ref="toggleBtnRef"
-          class="inline-flex relative items-center gap-[0.3rem] bg-transparent border-0 overflow-visible font-medium text-[#e9e9ef] leading-none cursor-pointer pointer-events-auto sm-toggle"
-          :aria-label="open ? 'Close menu' : 'Open menu'"
-          :aria-expanded="open"
-          aria-controls="staggered-menu-panel"
-          @click="toggleMenu"
-          type="button"
-        >
-          <span
-            ref="textWrapRef"
-            class="inline-block relative w-[var(--sm-toggle-width,auto)] min-w-[var(--sm-toggle-width,auto)] h-[1em] overflow-hidden whitespace-nowrap sm-toggle-textWrap"
-            aria-hidden="true"
+        <div class="staggered-menu-header__content">
+          <RouterLink
+            to="/"
+            class="flex items-center pointer-events-auto select-none sm-logo"
+            aria-label="Ir para a Home"
           >
-            <span ref="textInnerRef" class="flex flex-col leading-none sm-toggle-textInner">
-              <span v-for="(line, index) in textLines" :key="index" class="block h-[1em] leading-none sm-toggle-line">
-                {{ line }}
+            <img
+              :src="logoUrl || defaultLogoUrl"
+              alt="Logo"
+              class="block w-auto h-8 object-contain sm-logo-img"
+              :draggable="false"
+              width="110"
+              height="24"
+            />
+          </RouterLink>
+
+          <button
+            ref="toggleBtnRef"
+            class="inline-flex relative items-center gap-[0.3rem] bg-transparent border-0 overflow-visible font-medium text-[#e9e9ef] leading-none cursor-pointer pointer-events-auto sm-toggle"
+            :aria-label="open ? 'Close menu' : 'Open menu'"
+            :aria-expanded="open"
+            aria-controls="staggered-menu-panel"
+            @click="toggleMenu"
+            type="button"
+          >
+            <span
+              ref="textWrapRef"
+              class="inline-block relative w-[var(--sm-toggle-width,auto)] min-w-[var(--sm-toggle-width,auto)] h-[1em] overflow-hidden whitespace-nowrap sm-toggle-textWrap"
+              aria-hidden="true"
+            >
+              <span ref="textInnerRef" class="flex flex-col leading-none sm-toggle-textInner">
+                <span v-for="(line, index) in textLines" :key="index" class="block h-[1em] leading-none sm-toggle-line">
+                  {{ line }}
+                </span>
               </span>
             </span>
-          </span>
 
-          <span
-            ref="iconRef"
-            class="inline-flex relative justify-center items-center w-[14px] h-[14px] sm-icon shrink-0 [will-change:transform]"
-            aria-hidden="true"
-          >
             <span
-              ref="plusHRef"
-              class="top-1/2 left-1/2 absolute bg-current rounded-[2px] w-full h-[2px] -translate-x-1/2 -translate-y-1/2 sm-icon-line [will-change:transform]"
-            />
-            <span
-              ref="plusVRef"
-              class="top-1/2 left-1/2 absolute bg-current rounded-[2px] w-full h-[2px] -translate-x-1/2 -translate-y-1/2 sm-icon-line sm-icon-line-v [will-change:transform]"
-            />
-          </span>
-        </button>
+              ref="iconRef"
+              class="inline-flex relative justify-center items-center w-[14px] h-[14px] sm-icon shrink-0 [will-change:transform]"
+              aria-hidden="true"
+            >
+              <span
+                ref="plusHRef"
+                class="top-1/2 left-1/2 absolute bg-current rounded-[2px] w-full h-[2px] -translate-x-1/2 -translate-y-1/2 sm-icon-line [will-change:transform]"
+              />
+              <span
+                ref="plusVRef"
+                class="top-1/2 left-1/2 absolute bg-current rounded-[2px] w-full h-[2px] -translate-x-1/2 -translate-y-1/2 sm-icon-line sm-icon-line-v [will-change:transform]"
+              />
+            </span>
+          </button>
+        </div>
       </header>
 
       <aside
@@ -185,6 +198,77 @@ const props = withDefaults(defineProps<StaggeredMenuProps>(), {
 
 const open = ref(false);
 const openRef = ref(false);
+
+const headerScrolled = ref(false);
+const SCROLL_THRESHOLD = 30;
+const HEADER_TRANSITION = '0.4s ease';
+const headerTransparentStyle = {
+  background: 'transparent',
+  backdropFilter: 'none',
+  WebkitBackdropFilter: 'none',
+  transition: `background ${HEADER_TRANSITION}, backdrop-filter ${HEADER_TRANSITION}, -webkit-backdrop-filter ${HEADER_TRANSITION}`
+};
+const headerBlurStyle = {
+  background: 'rgba(0, 0, 0, 0.4)',
+  backdropFilter: 'blur(12px)',
+  WebkitBackdropFilter: 'blur(12px)',
+  transition: `background ${HEADER_TRANSITION}, backdrop-filter ${HEADER_TRANSITION}, -webkit-backdrop-filter ${HEADER_TRANSITION}`
+};
+
+const getScrollTop = () => {
+  if (typeof window === 'undefined') return 0;
+  const w = window.scrollY ?? window.pageYOffset ?? 0;
+  const doc = document.documentElement?.scrollTop ?? 0;
+  const body = document.body?.scrollTop ?? 0;
+  return Math.max(Number(w) || 0, doc, body);
+};
+
+const handleScroll = () => {
+  const scrollTop = getScrollTop();
+  if (scrollTop <= SCROLL_THRESHOLD) {
+    headerScrolled.value = false;
+    return;
+  }
+  headerScrolled.value = true;
+};
+
+let intersectionObserver: IntersectionObserver | null = null;
+const SENTINEL_SELECTORS: string[] = ['#inicio', '.contact-header', '.contact-content', 'main'];
+const SENTINEL_TOP_THRESHOLD = 10;
+
+const setupScrollDetection = () => {
+  if (typeof document === 'undefined') return;
+  let sentinel: Element | null = null;
+  for (const sel of SENTINEL_SELECTORS) {
+    sentinel = document.querySelector(sel);
+    if (sentinel) break;
+  }
+  if (sentinel) {
+    if (intersectionObserver) {
+      intersectionObserver.disconnect();
+      intersectionObserver = null;
+    }
+    const updateFromSentinel = (el: Element) => {
+      const scrollTop = getScrollTop();
+      if (scrollTop <= SCROLL_THRESHOLD) {
+        headerScrolled.value = false;
+        return;
+      }
+      const top = el.getBoundingClientRect().top;
+      headerScrolled.value = top < -SENTINEL_TOP_THRESHOLD;
+    };
+    intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.target) return;
+        updateFromSentinel(entry.target as Element);
+      },
+      { root: null, rootMargin: '0px', threshold: [0, 0.01, 0.1, 0.5, 1] }
+    );
+    intersectionObserver.observe(sentinel);
+    updateFromSentinel(sentinel);
+  }
+};
 
 const panelRef = useTemplateRef('panelRef');
 const preLayersRef = useTemplateRef('preLayersRef');
@@ -512,10 +596,22 @@ watch(
 onMounted(() => {
   nextTick(() => {
     initializeGSAP();
+    setupScrollDetection();
   });
+  handleScroll();
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  document.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('scrollend', handleScroll, { passive: true });
 });
 
 onBeforeUnmount(() => {
+  if (intersectionObserver) {
+    intersectionObserver.disconnect();
+    intersectionObserver = null;
+  }
+  window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scrollend', handleScroll);
   openTlRef.value?.kill();
   closeTweenRef.value?.kill();
   spinTweenRef.value?.kill();
@@ -576,14 +672,40 @@ onBeforeUnmount(() => {
   padding: 3em;
   padding-left: 5em;
   padding-right: 4em;
-  background: transparent;
-  pointer-events: auto;
-  z-index: 50;
+  pointer-events: none;
+  z-index: 20;
   overflow: visible;
   box-sizing: border-box;
 }
 
-.sm-scope .staggered-menu-header > * {
+.sm-scope .staggered-menu-header__backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 7em;
+  z-index: 1;
+  pointer-events: none;
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease;
+}
+
+.sm-scope .staggered-menu-header__backdrop.staggered-menu-header--blur {
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.sm-scope .staggered-menu-header__content {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.sm-scope .staggered-menu-header__content > * {
   pointer-events: auto;
 }
 

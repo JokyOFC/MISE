@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Doce Mundo Confeitaria",
+    "description": "Descrição do primeiro projeto. Uma solução inovadora que resolve problemas complexos com tecnologia de ponta.",
+    "icon": "pi pi-circle-fill",
+    "technologies": ["HTML5", "CSS3", "JavaScript", "Figma"]
+  },
+  {
+    "id": 2,
+    "name": "CineFlix",
+    "description": "Descrição do segundo projeto. Uma plataforma moderna desenvolvida com as melhores práticas de desenvolvimento.",
+    "icon": "pi pi-code",
+    "technologies": ["React", "Node.js", "PostgreSQL", "Docker"]
+  },
+  {
+    "id": 3,
+    "name": "Portifólio Engenheiro de Software",
+    "description": "Descrição do terceiro projeto. Uma aplicação web responsiva com foco em experiência do usuário.",
+    "icon": "pi pi-sliders-h",
+    "technologies": ["HTML5", "CSS3", "JavaScript", "Figma"]
+  }
+]

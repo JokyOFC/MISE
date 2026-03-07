@@ -1,13 +1,21 @@
 <script setup lang="ts">
+    import { useRouter } from 'vue-router';
     import Squares from './Squares/Squares.vue';
     import SplitText from "./SplitText/SplitText.vue";
     import BlurText from './BlurText/BlurText.vue';
     import Button from './Button/Button.vue';
     import ShinyText from './ShinyText/ShinyText.vue';
+    import { useHeader } from '../composables/useStrapiData';
+
+    const { config: headerConfig } = useHeader();
+    const router = useRouter();
 
     const handleAnimationComplete = () => {
         console.log('All letters have animated!');
     };
+
+    const scrollToContact = () => router.push('/#contato');
+    const scrollToAbout = () => router.push('/#sobre');
 </script>
 
 <template>
@@ -25,7 +33,7 @@
             <div class="text-block">
                 <div class="name-container">
                     <BlurText
-                        text="Joaquim Julião Ramos Esteves Filho - "
+                        :text="headerConfig.fullName"
                         class-name="name-paragraph"
                         :delay="100"
                         :threshold="0.1"
@@ -36,7 +44,8 @@
                         @animation-complete="handleAnimationComplete"
                     />
                     <BlurText
-                        :texts="['Ciêntista da Computação', 'Salvador, Bahia, Brazil', 'Desenvolvedor Web', 'Desenvolvedor Mobile']"
+                        v-if="headerConfig.rotatingTexts.length"
+                        :texts="headerConfig.rotatingTexts"
                         :delay="200"
                         :rotation-interval="4000"
                         :auto="true"
@@ -52,21 +61,7 @@
                     />
                 </div>
                 <SplitText
-                    text="ENGENHEIRO DE"
-                    class-name="text-5xl font-bold"
-                    :delay="40"
-                    :duration="0.6"
-                    ease="power3.out"
-                    split-type="chars"
-                    :from="{ opacity: 0, y: 40 }"
-                    :to="{ opacity: 1, y: 0 }"
-                    :threshold="0.1"
-                    root-margin="-100px"
-                    text-align="left"
-                    @animation-complete="handleAnimationComplete"
-                />
-                <SplitText
-                    text="SOFTWARE"
+                    :text="headerConfig.mainTitle"
                     class-name="text-5xl font-bold"
                     :delay="40"
                     :duration="0.6"
@@ -81,7 +76,8 @@
                 />
             </div>
             <SplitText
-                text="FULL STACK"
+                v-if="headerConfig.subTitle"
+                :text="headerConfig.subTitle"
                 class-name="text-5xl font-semibold"
                 :delay="80"
                 :duration="0.6"
@@ -95,7 +91,7 @@
                 @animation-complete="handleAnimationComplete"
             />
             <SplitText
-                text="Apaixonado por tecnologia e programação, sempre buscando novos desafios e oportunidades de aprendizado."
+                :text="headerConfig.tagline"
                 class-name="name-paragraph-split"
                 :delay="20"
                 :duration="0.6"
@@ -109,16 +105,35 @@
                 @animation-complete="handleAnimationComplete"
             />
             <div class="buttons-container">
-                <Button type="transparent" shape="round" class="header-button">
-                    <ShinyText :disabled="false" 
-                    :speed="5" text="SAIBA MAIS" />
-                </Button>
-                <Button type="color" color="#0F4C5C" shape="round" class="header-button">
-                    ENTRE EM CONTATO
-                </Button>
-                <Button type="light" shape="round" class="header-button">
-                    BAIXAR CV
-                </Button>
+                <template v-for="(btn, i) in headerConfig.buttons" :key="i">
+                    <Button
+                        v-if="btn.label.toUpperCase() === 'SAIBA MAIS'"
+                        type="transparent"
+                        shape="round"
+                        class="header-button"
+                        @click="scrollToAbout"
+                    >
+                        <ShinyText :disabled="false" :speed="5" :text="btn.label" />
+                    </Button>
+                    <Button
+                        v-else-if="btn.label.toUpperCase().includes('CONTATO')"
+                        type="color"
+                        color="#0F4C5C"
+                        shape="round"
+                        class="header-button"
+                        @click="scrollToContact"
+                    >
+                        {{ btn.label }}
+                    </Button>
+                    <Button
+                        v-else
+                        type="light"
+                        shape="round"
+                        class="header-button"
+                    >
+                        {{ btn.label }}
+                    </Button>
+                </template>
             </div>
         </div>
     </div>

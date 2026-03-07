@@ -1,0 +1,27 @@
+{
+  "socialLinks": [
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/seu-usuario"
+    },
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/seu-perfil"
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/seu-usuario"
+    },
+    {
+      "id": "discord",
+      "label": "Discord",
+      "url": "https://discord.gg/seu-servidor"
+    }
+  ],
+  "ctaText": "Tem um projeto em mente ou precisa tirar uma ideia do papel? Vamos conversar e construir algo incrível juntos.",
+  "copyright":
+    "© 2026 Joaquim Esteves. Todos os direitos reservados."
+}

@@ -1,0 +1,17 @@
+{
+  "fullName": "Joaquim Julião Ramos Esteves Filho - ",
+  "rotatingTexts": [
+    { "text": "Ciêntista da Computação" },
+    { "text": "Salvador, Bahia, Brazil" },
+    { "text": "Desenvolvedor Web" },
+    { "text": "Desenvolvedor Mobile" }
+  ],
+  "mainTitle": "ENGENHEIRO DE SOFTWARE",
+  "subTitle": "FULL STACK",
+  "tagline": "Apaixonado por tecnologia e programação, sempre buscando novos desafios e oportunidades de aprendizado.",
+  "buttons": [
+    { "label": "SAIBA MAIS", "url": "#sobre" },
+    { "label": "ENTRE EM CONTATO", "url": "#contato" },
+    { "label": "BAIXAR CV", "url": "" }
+  ]
+}
