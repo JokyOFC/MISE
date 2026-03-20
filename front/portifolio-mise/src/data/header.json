@@ -11,7 +11,7 @@
   "tagline": "Apaixonado por tecnologia e programação, sempre buscando novos desafios e oportunidades de aprendizado.",
   "buttons": [
     { "label": "SAIBA MAIS", "url": "#sobre" },
-    { "label": "ENTRE EM CONTATO", "url": "#contato" },
-    { "label": "BAIXAR CV", "url": "" }
+    { "label": "ENTRE EM CONTATO", "url": "/contato" },
+    { "label": "BAIXAR CV", "url": "/Joaquim Esteves - CV.pdf" }
   ]
 }

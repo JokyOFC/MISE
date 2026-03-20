@@ -1,0 +1,17 @@
+{
+  "title": "ABOUT ME",
+  "paragraphs": [
+    { "content": "I’m a <strong>Fullstack Software Engineer</strong> with a degree in Computer Science and 4+ years of experience building scalable, high‑performance solutions.", "highlight": false },
+    { "content": "I’ve worked on web applications, robust backends, modern frontends, and mobile apps, focusing on solid architecture, clean code, and performance—from business rules to the final UI.", "highlight": false },
+    { "content": "I take a product‑oriented approach, prioritizing scalability, maintainability, and engineering best practices such as clean architecture, automated testing, and solid development standards.", "highlight": false },
+    { "content": "I’m passionate about technology and driven by curiosity. I’m always exploring new tools, following market trends, and growing technically to deliver more efficient, innovative solutions.", "highlight": false },
+    { "content": "My goal is to turn ideas into well‑structured, performant digital products ready to scale.", "highlight": true }
+  ],
+  "profile": {
+    "name": "Joaquim E.",
+    "title": "Software Engineer",
+    "handle": "JokyOFC",
+    "status": "Online",
+    "contactText": "GitHub"
+  }
+}

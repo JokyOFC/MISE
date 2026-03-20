@@ -1,0 +1,17 @@
+{
+  "fullName": "Joaquim Julião Ramos Esteves Filho — ",
+  "rotatingTexts": [
+    { "text": "Computer Scientist" },
+    { "text": "Salvador, Bahia, Brazil" },
+    { "text": "Web Developer" },
+    { "text": "Mobile Developer" }
+  ],
+  "mainTitle": "SOFTWARE ENGINEER",
+  "subTitle": "FULL STACK",
+  "tagline": "Passionate about technology and programming, always looking for new challenges and learning opportunities.",
+  "buttons": [
+    { "label": "LEARN MORE", "url": "#sobre" },
+    { "label": "GET IN TOUCH", "url": "/contato" },
+    { "label": "DOWNLOAD CV", "url": "/Joaquim Esteves - CV.pdf" }
+  ]
+}

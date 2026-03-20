@@ -1,14 +1,16 @@
 <script setup lang="ts">
     import { ref, computed, onMounted, nextTick, useTemplateRef } from 'vue';
+    import { useWindowSize } from '@vueuse/core';
     import { gsap } from 'gsap';
     import CardSwap from './CardSwap/CardSwap.vue';
     import AnimatedContent from './AnimatedContent/AnimatedContent.vue';
+    import { useI18n } from 'vue-i18n';
     import { useProjects } from '../composables/useStrapiData';
-
     import project1Image from '../assets/projects/project_1.png';
     import project2Image from '../assets/projects/project_2.png';
     import project3Image from '../assets/projects/project_3.png';
 
+    const { t } = useI18n();
     const defaultImages = [project1Image, project2Image, project3Image];
     const { projects } = useProjects();
     const projectsWithImages = computed(() =>
@@ -107,6 +109,66 @@
         return list[currentProjectIndex.value] || list[0];
     });
 
+    const { width: windowWidth } = useWindowSize();
+
+    /** Dimensões e espaçamento do stack alinhados à largura real da viewport (evita 1100px + scale no mobile). */
+    const cardSwapLayout = computed(() => {
+        const w = windowWidth.value || 1200;
+        const pad = 24;
+        if (w <= 480) {
+            const cw = Math.min(340, Math.max(260, w - pad * 2));
+            const ch = Math.round(cw * 0.58);
+            return {
+                width: cw,
+                height: ch,
+                cardDistance: 22,
+                verticalDistance: 26,
+                skewAmount: 3
+            };
+        }
+        if (w <= 768) {
+            const cw = Math.min(520, Math.max(300, w - pad * 2));
+            const ch = Math.round(cw * 0.56);
+            return {
+                width: cw,
+                height: ch,
+                cardDistance: 34,
+                verticalDistance: 42,
+                skewAmount: 4
+            };
+        }
+        if (w <= 1024) {
+            return {
+                width: Math.min(780, w - 80),
+                height: 440,
+                cardDistance: 48,
+                verticalDistance: 56,
+                skewAmount: 5
+            };
+        }
+        /* Desktop: 1100×600 quando cabe; encolhe só o necessário para não cortar */
+        const gutter = 140;
+        const cw = Math.min(1100, Math.max(720, w - gutter));
+        const ch = Math.round(cw * (600 / 1100));
+        return {
+            width: cw,
+            height: ch,
+            cardDistance: 60,
+            verticalDistance: 70,
+            skewAmount: 6
+        };
+    });
+
+    /** Largura/altura do wrapper = área do stack (filho é absolute; sem isto o bloco colapsa). */
+    const cardsOffsetStyle = computed(() => {
+        const { width, height } = cardSwapLayout.value;
+        return {
+            width: `${width}px`,
+            maxWidth: '100%',
+            minHeight: `${height}px`
+        };
+    });
+
     onMounted(() => {
         // Inicializa a animação do título e descrição
         nextTick(() => {
@@ -135,7 +197,7 @@
             :delay="0"
             @complete="handleComplete"
         >
-            <span>PROJETOS</span>
+            <span>{{ t('sections.projects') }}</span>
         </AnimatedContent>
     </div>
     <div class="projects-description">
@@ -152,18 +214,21 @@
         </div>
     </div>
   <div class="projects-container">
-      <div class="projects-cards-offset">
-      <CardSwap 
-      :card-distance="60"
-      :vertical-distance="70"
+      <div
+        class="projects-cards-offset"
+        :style="cardsOffsetStyle"
+      >
+      <CardSwap
+      :card-distance="cardSwapLayout.cardDistance"
+      :vertical-distance="cardSwapLayout.verticalDistance"
       :delay="10000"
-      :skew-amount="6"
+      :skew-amount="cardSwapLayout.skewAmount"
       easing="elastic"
       :pause-on-hover="true"
       @card-click="handleCardClick"
       @order-changed="handleOrderChanged"
-      :width="1100"
-      :height="600"
+      :width="cardSwapLayout.width"
+      :height="cardSwapLayout.height"
     >
     <template v-for="(project, index) in projectsWithImages" :key="project.id" #[`card-${index}`]>
       <div class="card-wrapper">
@@ -180,7 +245,7 @@
           <img
             :src="project.image"
             :alt="project.name"
-            class="project-image"
+            class="project-image mise-themed-graphic"
             @load="onImageLoad($event, project.id)"
           />
         </div>
@@ -201,14 +266,45 @@
   justify-content: center;
   padding: 2em 3em;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   position: absolute;
   inset: 0;
+  margin-bottom: -20vh;
   z-index: 10;
 }
 
+@media (min-width: 769px) {
+  .projects-container {
+    justify-content: flex-end;
+    align-items: flex-end;
+    /* Abaixo do “PROJETOS” + folga para o stack 3D (cards sobem em relação ao contentor) */
+    padding-top: clamp(9.5rem, 24vh, 14.5rem);
+    padding-bottom: 10vh;
+  }
+
+  .projects-description {
+    justify-content: flex-start;
+    padding-top: clamp(9.5rem, 24vh, 14.5rem);
+  }
+
+  /* O stack ancora em bottom:0 e os offsets GSAP projetam para cima — reserva espaço extra só na coluna dos cards */
+  .projects-cards-offset {
+    padding-top: clamp(3.75rem, 9.5vh, 5.75rem);
+  }
+}
+
+/* Stack à direita; sem translateY grande (empurrava tudo para baixo e cortava em baixo) */
 .projects-cards-offset {
-  transform: translateY(40vh) translateX(53vw);
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  transform: none;
+  display: block;
+  pointer-events: none;
+}
+
+.projects-cards-offset :deep(.card-swap-container) {
+  pointer-events: auto;
 }
 
 .card-wrapper {
@@ -223,8 +319,8 @@
 
 .card-header {
   border-radius: 1rem;
-  border-bottom: 1.5px solid white;
-  background: linear-gradient(to top, #222222, #0b0b0b);
+  border-bottom: 1.5px solid var(--mise-project-card-border);
+  background: var(--mise-project-card-header);
   flex-shrink: 0;
 }
 
@@ -232,10 +328,12 @@
   margin: 0.7rem;
   display: flex;
   align-items: center;
+  color: var(--mise-text-heading);
 }
 
 .card-icon {
   margin-right: 0.5rem;
+  color: var(--mise-accent);
 }
 
 .card-body {
@@ -270,12 +368,14 @@
   text-align: center;
   padding-top: clamp(2rem, 10vh, 13vh);
   pointer-events: none;
+  /* Acima dos cards (projects-container z-index 10) para o título não ser tapado */
+  z-index: 12;
 }
 
 .projects-title span {
   font-size: clamp(1.75rem, 5vw, 4rem);
   font-weight: 600;
-  color: white;
+  color: var(--mise-text-heading);
 }
 
 .projects-description {
@@ -290,19 +390,21 @@
   justify-content: center;
   gap: 0.75rem 1rem;
   padding: 2rem 0 2rem clamp(2rem, 6vw, 9rem);
+  z-index: 2;
+  box-sizing: border-box;
 }
 
 .projects-description-title {
   font-size: clamp(1.1rem, 2vw, 2rem);
   font-weight: 600;
-  color: white;
+  color: var(--mise-text-heading);
   line-height: 1.25;
 }
 
 .projects-description-text {
   font-size: clamp(0.875rem, 1.2vw, 1.2rem);
   font-weight: 400;
-  color: white;
+  color: var(--mise-text);
   line-height: 1.5;
 }
 
@@ -318,16 +420,16 @@
   padding: 0.25rem 0.6rem;
   font-size: clamp(0.7rem, 1.5vw, 0.85rem);
   font-weight: 500;
-  color: white;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--mise-text-heading);
+  background: var(--mise-project-pill-bg);
+  border: 1px solid var(--mise-project-pill-border);
   border-radius: 9999px;
   white-space: nowrap;
 }
 
 .technology-pill:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: color-mix(in srgb, var(--mise-project-pill-bg) 80%, var(--mise-accent) 12%);
+  border-color: color-mix(in srgb, var(--mise-project-pill-border) 70%, var(--mise-accent) 30%);
 }
 
 /* Tablet */
@@ -340,12 +442,41 @@
     width: 42%;
     padding-left: clamp(1.5rem, 4vw, 4rem);
   }
+
+  .projects-cards-offset {
+    transform: none;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .projects-container {
+    padding-top: clamp(10.25rem, 25vh, 15rem);
+  }
+
+  .projects-description {
+    padding-top: clamp(10.25rem, 25vh, 15rem);
+  }
 }
 
 /* Mobile landscape / tablet portrait */
 @media (max-width: 768px) {
   .projects-container {
     padding: 1.25em 1.5em;
+    align-items: flex-end;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  .projects-cards-offset {
+    flex: 1 1 auto;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: min(48vh, 380px) !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transform: none;
+    padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
   .projects-title {
@@ -353,9 +484,14 @@
   }
 
   .projects-description {
-    width: 55%;
+    width: 100%;
     max-width: none;
-    padding: 1.5rem 0 1.5rem 1.5rem;
+    height: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    justify-content: flex-start;
+    padding: 4.5rem 1.5rem 0.75rem;
     gap: 0.5rem 0.75rem;
   }
 
@@ -365,6 +501,7 @@
 
   .projects-description-text {
     font-size: 0.875rem;
+    max-width: 42rem;
   }
 
   .technology-pill {
@@ -376,8 +513,20 @@
 /* Mobile */
 @media (max-width: 480px) {
   .projects-container {
-    padding: 1em 1rem;
+    padding: 0.75rem 0.75rem 0.5rem;
     align-items: flex-end;
+    justify-content: center;
+  }
+
+  .projects-cards-offset {
+    flex: 1 1 auto;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: min(44vh, 340px) !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    transform: none;
   }
 
   .projects-title {
@@ -391,9 +540,8 @@
   .projects-description {
     width: 100%;
     max-width: none;
-    padding: 1rem 1rem 1.5rem;
+    padding: 3.75rem 1rem 0.5rem;
     justify-content: flex-start;
-    padding-top: 2.5rem;
     gap: 0.4rem 0.6rem;
   }
 

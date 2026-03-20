@@ -229,8 +229,12 @@ const swap = () => {
   const tl = gsap.timeline();
   tlRef.value = tl;
 
+  const dropPx =
+    typeof props.height === 'number'
+      ? Math.max(280, props.height * 0.85)
+      : 500;
   tl.to(elFront, {
-    y: '+=500',
+    y: `+=${dropPx}`,
     duration: config.value.durDrop,
     ease: config.value.ease
   });
@@ -386,15 +390,14 @@ onUnmounted(() => {
   overflow: visible;
 }
 
+/* Largura/altura vêm do pai; centraliza na base para caber na viewport sem scale fixo */
 @media (max-width: 768px) {
   .card-swap-container {
-    transform: translate(25%, 25%) scale(0.75);
-  }
-}
-
-@media (max-width: 480px) {
-  .card-swap-container {
-    transform: translate(25%, 25%) scale(0.55);
+    left: 50%;
+    right: auto;
+    bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    transform-origin: center bottom;
   }
 }
 

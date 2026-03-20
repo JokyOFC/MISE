@@ -30,7 +30,7 @@ const { config } = useHowCanIHelp();
   min-height: 100vh;
   padding: 3rem 7vw;
   box-sizing: border-box;
-  background-color: #0b0b0b;
+  background-color: var(--mise-bg);
 }
 
 .how-can-i-help__intro {
@@ -41,14 +41,14 @@ const { config } = useHowCanIHelp();
 .how-can-i-help__title {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   font-weight: 600;
-  color: #fff;
+  color: var(--mise-text-heading);
   margin-bottom: 1rem;
 }
 
 .how-can-i-help__description {
   font-size: clamp(0.95rem, 2vw, 1.05rem);
   line-height: 1.6;
-  color: #b0b0b0;
+  color: var(--mise-text-muted);
 }
 
 .how-can-i-help__services {
@@ -62,9 +62,9 @@ const { config } = useHowCanIHelp();
 
 .how-can-i-help__service {
   padding: 1.25rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--mise-surface-glass);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--mise-border);
 }
 
 .how-can-i-help__service-icon {
@@ -72,20 +72,20 @@ const { config } = useHowCanIHelp();
   width: 1.5rem;
   height: 1.5rem;
   margin-bottom: 0.75rem;
-  color: #0F4C5C;
+  color: var(--mise-accent);
 }
 
 .how-can-i-help__service-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--mise-text-heading);
   margin-bottom: 0.5rem;
 }
 
 .how-can-i-help__service-description {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #b0b0b0;
+  color: var(--mise-text-muted);
   margin: 0;
 }
 </style>

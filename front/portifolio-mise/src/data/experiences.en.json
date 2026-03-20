@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "company": "63.340.182 JOAQUIM JULIAO RAMOS ESTEVES FILHO",
+    "role": "Freelancer",
+    "period": "2025 — Present",
+    "location": "Remote",
+    "description": "Development of custom digital solutions, with focus on client needs and value delivery to the product.",
+    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP", "React Native", "IOS", "Android", "React"]
+  },
+  {
+    "id": 1,
+    "company": "Metta Software House",
+    "role": "Software Engineer",
+    "period": "2025 — Present",
+    "location": "Remote",
+    "description": "Responsible for developing responsive interfaces, mobile applications, and REST API integration in high-impact projects.",
+    "technologies": ["React Native", "IOS", "Android", "TypeScript", "JavaScript", "PHP", "MySQL"]
+  },
+  {
+    "id": 2,
+    "company": "SGN Sistemas",
+    "role": "Software Engineer",
+    "period": "Sep 2023 — Aug 2024",
+    "location": "Salvador, BA — Hybrid",
+    "description": "Full web and mobile applications—from database modeling to the presentation layer.",
+    "technologies": ["Node.js", "React Native", "Android", "iOS", "React", "Express", "PHP", "MySQL", "SQL Server", "Shadcn", "Tailwind", "Git", "Docker"]
+  },
+  {
+    "id": 3,
+    "company": "SGN Sistemas",
+    "role": "Intern",
+    "period": "Apr 2022 — Sep 2023",
+    "location": "Salvador, BA",
+    "description": "Improvements to internal systems for better workflow efficiency.",
+    "technologies": ["Centura", "SQL Server", "Git"]
+  }
+]

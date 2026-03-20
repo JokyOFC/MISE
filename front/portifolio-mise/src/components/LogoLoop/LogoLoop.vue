@@ -402,7 +402,7 @@ const LogoContent = defineComponent({
         });
       } else {
         const imgClasses = [
-          'h-[var(--logoloop-logoHeight)] w-auto block object-contain',
+          'h-[var(--logoloop-logoHeight)] w-auto block object-contain mise-themed-graphic',
           '[-webkit-user-drag:none] pointer-events-none',
           '[image-rendering:-webkit-optimize-contrast]',
           'motion-reduce:transition-none'

@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AnimatedContent from './AnimatedContent/AnimatedContent.vue';
 import DotGrid from './DotGrid/DotGrid.vue';
 import { useExperiences } from '../composables/useStrapiData';
+import { useTheme } from '../composables/useTheme';
 
+const { t } = useI18n();
 const { experiences } = useExperiences();
+const { isDark } = useTheme();
+
+const dotBaseColor = computed(() => (isDark.value ? '#0b0b0b' : '#94a3b8'));
 </script>
 
 <template>
@@ -12,7 +19,7 @@ const { experiences } = useExperiences();
       <DotGrid
         :dot-size="10"
         :gap="28"
-        base-color="#0b0b0b"
+        :base-color="dotBaseColor"
         active-color="#0F4C5C"
         :proximity="150"
         :speed-trigger="100"
@@ -39,7 +46,7 @@ const { experiences } = useExperiences();
           :threshold="0.1"
           :delay="0"
         >
-          <span>EXPERIÊNCIAS</span>
+          <span>{{ t('sections.experiences') }}</span>
         </AnimatedContent>
       </div>
 
@@ -104,8 +111,8 @@ const { experiences } = useExperiences();
   min-height: 100vh;
   padding: 5rem clamp(2rem, 6vw, 6rem);
   box-sizing: border-box;
-  background-color: #000;
-  color: #ffffff;
+  background-color: var(--mise-bg-deep);
+  color: var(--mise-text-heading);
   overflow: hidden;
 }
 
@@ -136,6 +143,7 @@ const { experiences } = useExperiences();
   font-size: clamp(1.8rem, 4vw, 3.5rem);
   font-weight: 600;
   letter-spacing: 0.15em;
+  color: var(--mise-text-heading);
 }
 
 .experiences-timeline-container {
@@ -154,9 +162,9 @@ const { experiences } = useExperiences();
   width: 2px;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.2),
-    rgba(255, 255, 255, 0.55),
-    rgba(255, 255, 255, 0.15)
+    var(--mise-exp-line-top),
+    var(--mise-exp-line-mid),
+    var(--mise-exp-line-bot)
   );
   transform: translateX(-50%);
   pointer-events: none;
@@ -183,12 +191,12 @@ const { experiences } = useExperiences();
   width: 14px;
   height: 14px;
   border-radius: 999px;
-  background: #0f4c5c;
-  border: 3px solid #ffffff;
+  background: var(--mise-accent);
+  border: 3px solid var(--mise-exp-dot-ring);
   transform: translateX(-50%);
   box-shadow:
-    0 0 0 2px rgba(15, 76, 92, 0.55),
-    0 0 18px rgba(15, 76, 92, 0.7);
+    0 0 0 2px color-mix(in srgb, var(--mise-accent) 55%, transparent),
+    0 0 18px color-mix(in srgb, var(--mise-accent) 70%, transparent);
 }
 
 .experiences-card {
@@ -197,11 +205,11 @@ const { experiences } = useExperiences();
   max-width: 480px;
   border-radius: 1.25rem;
   padding: 1.4rem 1.7rem 1.4rem;
-  background: radial-gradient(circle at top left, #1c3a4b 0, #050608 55%, #050608 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: var(--mise-exp-card-bg);
+  border: 1px solid var(--mise-exp-card-border);
   box-shadow:
-    0 18px 45px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(255, 255, 255, 0.02);
+    0 18px 45px var(--mise-exp-card-shadow),
+    0 0 0 1px color-mix(in srgb, var(--mise-border) 50%, transparent);
 }
 
 .experiences-item--left .experiences-card {
@@ -229,7 +237,7 @@ const { experiences } = useExperiences();
 .experiences-role {
   font-size: clamp(0.9rem, 1.2vw, 1.1rem);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--mise-text);
 }
 
 .experiences-meta {
@@ -240,13 +248,13 @@ const { experiences } = useExperiences();
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--mise-text-muted);
   margin-bottom: 0.75rem;
 }
 
 .experiences-period {
   padding-right: 0.75rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  border-right: 1px solid var(--mise-border-strong);
 }
 
 .experiences-location {
@@ -256,7 +264,7 @@ const { experiences } = useExperiences();
 .experiences-description {
   font-size: 0.86rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--mise-text);
   margin-bottom: 0.85rem;
 }
 
@@ -271,9 +279,9 @@ const { experiences } = useExperiences();
   padding: 0.25rem 0.6rem;
   font-size: 0.72rem;
   font-weight: 500;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--mise-text-heading);
+  background: var(--mise-exp-pill-bg);
+  border: 1px solid var(--mise-exp-pill-border);
   border-radius: 999px;
   white-space: nowrap;
   backdrop-filter: blur(8px);
@@ -284,8 +292,8 @@ const { experiences } = useExperiences();
 }
 
 .experiences-technology-pill:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.32);
+  background: color-mix(in srgb, var(--mise-exp-pill-bg) 85%, var(--mise-accent) 15%);
+  border-color: color-mix(in srgb, var(--mise-exp-pill-border) 70%, var(--mise-accent) 30%);
   transform: translateY(-1px);
 }
 

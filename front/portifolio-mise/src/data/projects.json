@@ -2,22 +2,22 @@
   {
     "id": 1,
     "name": "Doce Mundo Confeitaria",
-    "description": "Descrição do primeiro projeto. Uma solução inovadora que resolve problemas complexos com tecnologia de ponta.",
+    "description": "Portfólio com galeria de imagens desenvolvido para a confeitaria Doce Mundo, visando apresentar produtos e marcas associadas. Interface limpa e responsiva construída com HTML, CSS e JavaScript.",
     "icon": "pi pi-circle-fill",
-    "technologies": ["HTML5", "CSS3", "JavaScript", "Figma"]
+    "technologies": ["HTML5", "CSS3", "JavaScript"]
   },
   {
     "id": 2,
     "name": "CineFlix",
-    "description": "Descrição do segundo projeto. Uma plataforma moderna desenvolvida com as melhores práticas de desenvolvimento.",
+    "description": "Plataforma de streaming moderna de filmes e séries, desenvolvida como projeto pessoal. Integra APIs para informações de filmes (IMDB), tecnologia de streaming e interface fluida. Stack: Vite, React, TypeScript e demais ferramentas modernas.",
     "icon": "pi pi-code",
-    "technologies": ["React", "Node.js", "PostgreSQL", "Docker"]
+    "technologies": ["Vite", "React", "TypeScript", "IMDB API"]
   },
   {
     "id": 3,
     "name": "Portifólio Engenheiro de Software",
-    "description": "Descrição do terceiro projeto. Uma aplicação web responsiva com foco em experiência do usuário.",
+    "description": "Site de apresentação pessoal com seções de sobre, projetos, experiências e contato. Design responsivo com animações fluidas (GSAP), suporte a temas claro/escuro e internacionalização (pt-BR/en).",
     "icon": "pi pi-sliders-h",
-    "technologies": ["HTML5", "CSS3", "JavaScript", "Figma"]
+    "technologies": ["Vue.js", "TypeScript", "Vite", "GSAP", "Tailwind CSS", "Vue Router"]
   }
 ]

@@ -1,20 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import StaggeredMenu from '../components/StaggeredMenu/StaggeredMenu.vue';
 import Footer from '../components/Footer.vue';
 import Button from '../components/Button/Button.vue';
-import logoUrl from '../assets/logo.svg';
-import { computed } from 'vue';
+import { useBrandedLogo } from '../composables/useBrandedLogo';
 import { useFooter } from '../composables/useStrapiData';
+import { useTheme } from '../composables/useTheme';
 
+const { t } = useI18n();
 const { config: footerConfig } = useFooter();
+const { isDark, menuChrome } = useTheme();
 
-const menuItems = [
-  { label: 'Inicio', ariaLabel: 'Go to home page', link: '/#inicio' },
-  { label: 'Sobre', ariaLabel: 'Learn about us', link: '/#sobre' },
-  { label: 'Projetos', ariaLabel: 'View our services', link: '/#projetos' },
-  { label: 'Contato', ariaLabel: 'Get in touch', link: '/contato' }
-];
+const menuPrelayers = computed(() =>
+  isDark.value ? ['#0A2F36', '#0F4C5C'] : ['#e2e8f0', '#cbd5e1']
+);
+
+const logoUrl = useBrandedLogo();
+
+const menuItems = computed(() => [
+  { label: t('nav.home'), ariaLabel: t('nav.ariaHome'), link: '/#inicio' },
+  { label: t('nav.about'), ariaLabel: t('nav.ariaAbout'), link: '/#sobre' },
+  { label: t('nav.projects'), ariaLabel: t('nav.ariaProjects'), link: '/#projetos' },
+  { label: t('nav.contact'), ariaLabel: t('nav.ariaContact'), link: '/contato' },
+]);
 
 const socialItems = computed(() =>
   (footerConfig.value.socialLinks || []).map((link) => ({
@@ -64,10 +73,10 @@ const handleSubmit = () => {
       :social-items="socialItems"
       :display-socials="true"
       :display-item-numbering="true"
-      menu-button-color="#fff"
-      open-menu-button-color="#000"
+      :menu-button-color="menuChrome.menuButton"
+      :open-menu-button-color="menuChrome.menuOpen"
       :change-menu-color-on-open="true"
-      :colors="['#0A2F36', '#0F4C5C']"
+      :colors="menuPrelayers"
       :logo-url="logoUrl"
       accent-color="#0F4C5C"
       @menu-open="handleMenuOpen"
@@ -76,25 +85,23 @@ const handleSubmit = () => {
 
     <main class="contact-content">
       <header class="contact-header">
-        <p class="contact-pill">Vamos conversar</p>
-        <h1 class="contact-title">Entre em contato</h1>
+        <p class="contact-pill">{{ t('contact.pill') }}</p>
+        <h1 class="contact-title">{{ t('contact.title') }}</h1>
         <p class="contact-subtitle">
-          Quanto mais contexto você compartilhar sobre o seu projeto, melhor eu consigo
-          entender o que você precisa e propor a melhor solução.
+          {{ t('contact.subtitle') }}
         </p>
       </header>
 
       <div class="contact-grid">
         <section class="contact-panel contact-panel--info">
-          <h2 class="contact-panel-title">Como posso te ajudar</h2>
+          <h2 class="contact-panel-title">{{ t('contact.helpTitle') }}</h2>
           <p class="contact-panel-text">
-            Projetos web, mobile, consultoria técnica ou melhorias em sistemas que já existem.
-            Me conte onde você está hoje e onde quer chegar.
+            {{ t('contact.helpText') }}
           </p>
 
           <div class="contact-info-group">
             <div class="contact-info-item">
-              <span class="contact-info-label">E-mail</span>
+              <span class="contact-info-label">{{ t('contact.emailLabel') }}</span>
               <a class="contact-info-value" :href="`mailto:${contactEmail}`">
                 {{ contactEmail }}
               </a>
@@ -102,7 +109,7 @@ const handleSubmit = () => {
           </div>
 
           <div v-if="socialItems.length" class="contact-socials">
-            <span class="contact-socials-title">Redes sociais</span>
+            <span class="contact-socials-title">{{ t('contact.socialsTitle') }}</span>
             <ul class="contact-socials-list">
               <li
                 v-for="social in socialItems"
@@ -123,33 +130,33 @@ const handleSubmit = () => {
         </section>
 
         <section class="contact-panel contact-panel--form">
-          <h2 class="contact-panel-title">Conte-me sobre seu projeto</h2>
+          <h2 class="contact-panel-title">{{ t('contact.formSectionTitle') }}</h2>
           <p class="contact-panel-text">
-            Preencha os campos abaixo e eu retorno por e-mail com os próximos passos.
+            {{ t('contact.formSectionText') }}
           </p>
 
           <form class="contact-form" @submit.prevent="handleSubmit" novalidate>
             <div class="contact-form-row">
               <div class="contact-form-field">
-                <label class="contact-label" for="firstName">Nome</label>
+                <label class="contact-label" for="firstName">{{ t('contact.firstName') }}</label>
                 <input
                   id="firstName"
                   type="text"
                   name="firstName"
                   class="contact-input"
-                  placeholder="Seu nome"
+                  :placeholder="t('contact.placeholders.firstName')"
                   autocomplete="given-name"
                   v-model="firstName"
                 />
               </div>
               <div class="contact-form-field">
-                <label class="contact-label" for="lastName">Sobrenome</label>
+                <label class="contact-label" for="lastName">{{ t('contact.lastName') }}</label>
                 <input
                   id="lastName"
                   type="text"
                   name="lastName"
                   class="contact-input"
-                  placeholder="Seu sobrenome"
+                  :placeholder="t('contact.placeholders.lastName')"
                   autocomplete="family-name"
                   v-model="lastName"
                 />
@@ -158,25 +165,25 @@ const handleSubmit = () => {
 
             <div class="contact-form-row">
               <div class="contact-form-field">
-                <label class="contact-label" for="email">E-mail</label>
+                <label class="contact-label" for="email">{{ t('contact.emailLabel') }}</label>
                 <input
                   id="email"
                   type="email"
                   name="email"
                   class="contact-input"
-                  placeholder="seuemail@exemplo.com"
+                  :placeholder="t('contact.placeholders.email')"
                   autocomplete="email"
                   v-model="email"
                 />
               </div>
               <div class="contact-form-field">
-                <label class="contact-label" for="phone">Telefone</label>
+                <label class="contact-label" for="phone">{{ t('contact.phone') }}</label>
                 <input
                   id="phone"
                   type="tel"
                   name="phone"
                   class="contact-input"
-                  placeholder="(00) 00000-0000"
+                  :placeholder="t('contact.placeholders.phone')"
                   autocomplete="tel"
                   v-model="phone"
                 />
@@ -184,13 +191,13 @@ const handleSubmit = () => {
             </div>
 
             <div class="contact-form-field">
-              <label class="contact-label" for="project">Conte-me sobre seu projeto</label>
+              <label class="contact-label" for="project">{{ t('contact.projectLabel') }}</label>
               <textarea
                 id="project"
                 name="project"
                 class="contact-textarea"
                 rows="5"
-                placeholder="Compartilhe detalhes sobre o que você precisa, objetivos, prazos e qualquer informação importante."
+                :placeholder="t('contact.placeholders.project')"
                 v-model="project"
               ></textarea>
             </div>
@@ -202,7 +209,7 @@ const handleSubmit = () => {
                 shape="round"
                 class="contact-submit-button"
               >
-                ENVIAR MENSAGEM
+                {{ t('contact.submit') }}
               </Button>
             </div>
           </form>
@@ -220,8 +227,8 @@ const handleSubmit = () => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #0b0b0b;
-  color: #f9fafb;
+  background-color: var(--mise-bg);
+  color: var(--mise-text-heading);
 }
 
 .contact-content {
@@ -247,11 +254,11 @@ const handleSubmit = () => {
   gap: 0.4rem;
   padding: 0.25rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border: 1px solid var(--mise-border);
   font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--mise-text-muted);
 }
 
 .contact-title {
@@ -266,7 +273,7 @@ const handleSubmit = () => {
   font-size: 1.05rem;
   max-width: 640px;
   line-height: 1.7;
-  color: #e5e7eb;
+  color: var(--mise-text);
 }
 
 .contact-grid {
@@ -279,8 +286,8 @@ const handleSubmit = () => {
 
 .contact-panel {
   border-radius: 1rem;
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--mise-border);
+  background: var(--mise-surface-glass);
   padding: 1.75rem 1.75rem 1.9rem;
   display: flex;
   flex-direction: column;
@@ -298,7 +305,7 @@ const handleSubmit = () => {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.7;
-  color: #d1d5db;
+  color: var(--mise-text-muted);
 }
 
 .contact-info-group {
@@ -318,17 +325,17 @@ const handleSubmit = () => {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: #9ca3af;
+  color: var(--mise-text-muted);
 }
 
 .contact-info-value {
   font-size: 0.95rem;
-  color: #e5e7eb;
+  color: var(--mise-text);
   text-decoration: none;
 }
 
 .contact-info-value:hover {
-  color: #0fdfb3;
+  color: var(--mise-link-hover);
 }
 
 .contact-form {
@@ -354,12 +361,12 @@ const handleSubmit = () => {
 .contact-label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: rgba(226, 232, 240, 0.9);
+  color: var(--mise-text);
   transition: color 0.2s ease;
 }
 
 .contact-form-field:focus-within .contact-label {
-  color: #0f4c5c;
+  color: var(--mise-accent);
 }
 
 .contact-input,
@@ -368,10 +375,10 @@ const handleSubmit = () => {
   box-sizing: border-box;
   padding: 0.5rem 0 0.625rem;
   border: none;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.45);
+  border-bottom: 1px solid var(--mise-border-strong);
   border-radius: 0;
   background: transparent;
-  color: #f8fafc;
+  color: var(--mise-text-heading);
   font-size: 1rem;
   line-height: 1.5;
   outline: none;
@@ -383,19 +390,20 @@ const handleSubmit = () => {
 
 .contact-input:hover,
 .contact-textarea:hover {
-  border-bottom-color: rgba(148, 163, 184, 0.7);
+  border-bottom-color: var(--mise-text-muted);
 }
 
 .contact-input:focus,
 .contact-textarea:focus {
   border-bottom-width: 2px;
-  border-bottom-color: #0f4c5c;
+  border-bottom-color: var(--mise-accent);
   padding-bottom: calc(0.625rem - 1px); /* evita “pulo” ao passar de 1px para 2px */
 }
 
 .contact-input::placeholder,
 .contact-textarea::placeholder {
-  color: rgba(148, 163, 184, 0.65);
+  color: var(--mise-text-muted);
+  opacity: 0.85;
 }
 
 .contact-textarea {
@@ -414,7 +422,7 @@ const handleSubmit = () => {
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: #9ca3af;
+  color: var(--mise-text-muted);
 }
 
 .contact-socials-list {
@@ -436,8 +444,8 @@ const handleSubmit = () => {
   justify-content: center;
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  color: #e5e7eb;
+  border: 1px solid var(--mise-border-strong);
+  color: var(--mise-text);
   text-decoration: none;
   font-size: 0.9rem;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
@@ -445,9 +453,13 @@ const handleSubmit = () => {
 }
 
 .contact-socials-link:hover {
-  background: radial-gradient(circle at top left, rgba(15, 76, 92, 0.6), rgba(15, 23, 42, 0.95));
-  border-color: #0f4c5c;
-  color: #f9fafb;
+  background: radial-gradient(
+    circle at top left,
+    color-mix(in srgb, var(--mise-accent) 45%, transparent),
+    color-mix(in srgb, var(--mise-bg-deep) 92%, transparent)
+  );
+  border-color: var(--mise-accent);
+  color: var(--mise-text-heading);
   transform: translateY(-1px);
 }
 

@@ -1,21 +1,87 @@
 <script setup lang="ts">
-    import { useRouter } from 'vue-router';
+    import { computed } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
+    import { useI18n } from 'vue-i18n';
     import Squares from './Squares/Squares.vue';
     import SplitText from "./SplitText/SplitText.vue";
     import BlurText from './BlurText/BlurText.vue';
     import Button from './Button/Button.vue';
     import ShinyText from './ShinyText/ShinyText.vue';
     import { useHeader } from '../composables/useStrapiData';
+    import { useTheme } from '../composables/useTheme';
 
+    const { t } = useI18n();
     const { config: headerConfig } = useHeader();
     const router = useRouter();
+    const route = useRoute();
+    const { isDark } = useTheme();
+
+    /** Arquivo em `public/cv.pdf` — substitua pelo seu currículo. */
+    const CV_PUBLIC_PATH = '/Joaquim Esteves - CV.pdf';
+    const cvDownloadName = computed(() => t('header.cvFilename'));
+
+    const normalizeLabel = (label: string) =>
+        label
+            .toUpperCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+    const isSaibaMais = (label: string) => {
+        const n = normalizeLabel(label);
+        return (
+            n.includes('SAIBA MAIS') ||
+            n.includes('SAIBA +') ||
+            n.includes('LEARN MORE') ||
+            n.includes('READ MORE')
+        );
+    };
+
+    const isDownloadCv = (label: string) => {
+        const n = normalizeLabel(label);
+        return (
+            n.includes('CV') ||
+            n.includes('BAIXAR') ||
+            n.includes('CURRICULO') ||
+            n.includes('CURRICULUM') ||
+            n.includes('RESUME') ||
+            n.includes('DOWNLOAD')
+        );
+    };
+
+    const isContato = (label: string) => {
+        const n = normalizeLabel(label);
+        return n.includes('CONTATO') || n.includes('CONTACT') || n.includes('GET IN TOUCH');
+    };
+
+    const scrollToAbout = () => {
+        if (route.path === '/') {
+            document.querySelector('#sobre')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+        void router.push({ path: '/', hash: '#sobre' });
+    };
+
+    const goToContactPage = () => {
+        void router.push('/contato');
+    };
+
+    const downloadCv = () => {
+        const a = document.createElement('a');
+        a.href = CV_PUBLIC_PATH;
+        a.download = cvDownloadName.value;
+        a.rel = 'noopener';
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    const squaresBorder = computed(() => (isDark.value ? 'rgb(30,30,30)' : 'rgb(203, 213, 225)'));
+    const squaresVignette = computed(() => (isDark.value ? '#0b0b0b' : '#f1f5f9'));
 
     const handleAnimationComplete = () => {
         console.log('All letters have animated!');
     };
-
-    const scrollToContact = () => router.push('/#contato');
-    const scrollToAbout = () => router.push('/#sobre');
 </script>
 
 <template>
@@ -25,7 +91,8 @@
                 direction="diagonal"
                 :speed="0.5"
                 :squareSize="50"
-                borderColor="rgb(30,30,30)"
+                :borderColor="squaresBorder"
+                :vignette-edge-color="squaresVignette"
                 hoverFillColor="#0F4C5C"
             />
         </div>
@@ -107,7 +174,7 @@
             <div class="buttons-container">
                 <template v-for="(btn, i) in headerConfig.buttons" :key="i">
                     <Button
-                        v-if="btn.label.toUpperCase() === 'SAIBA MAIS'"
+                        v-if="isSaibaMais(btn.label)"
                         type="transparent"
                         shape="round"
                         class="header-button"
@@ -116,12 +183,21 @@
                         <ShinyText :disabled="false" :speed="5" :text="btn.label" />
                     </Button>
                     <Button
-                        v-else-if="btn.label.toUpperCase().includes('CONTATO')"
+                        v-else-if="isContato(btn.label) && !isDownloadCv(btn.label)"
                         type="color"
                         color="#0F4C5C"
                         shape="round"
                         class="header-button"
-                        @click="scrollToContact"
+                        @click="goToContactPage"
+                    >
+                        {{ btn.label }}
+                    </Button>
+                    <Button
+                        v-else-if="isDownloadCv(btn.label)"
+                        type="light"
+                        shape="round"
+                        class="header-button"
+                        @click="downloadCv"
                     >
                         {{ btn.label }}
                     </Button>
@@ -241,11 +317,11 @@
     line-height: 1.5;
     display: inline-flex;
     align-items: baseline;
-    color: white;
+    color: var(--mise-header-text-on-hero);
 }
 
 .name-container :deep(.name-paragraph.blur-text) {
-    color: white;
+    color: var(--mise-header-text-on-hero);
     font-size: 1.3rem;
     font-weight: 700;
     word-spacing: 0.01em;
@@ -271,7 +347,7 @@
     display: inline-block;
     vertical-align: baseline;
     word-spacing: 0.1px;
-    color: white;
+    color: var(--mise-header-text-on-hero);
 }
 
 .name-paragraph-split {
@@ -343,6 +419,7 @@
     word-spacing: 0.3em;
     word-break: break-word;
     overflow-wrap: break-word;
+    color: var(--mise-header-text-on-hero);
 }
 
 .text-block :deep(.split-parent),
@@ -350,7 +427,7 @@
 .text-block :deep(.split-parent .split-char),
 .text-block :deep(.split-parent .split-word),
 .text-block :deep(.split-parent .split-line) {
-    color: #0F4C5C;
+    color: var(--mise-header-title-accent);
 }
 
 

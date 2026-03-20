@@ -389,7 +389,7 @@ onUnmounted(() => {
   inset: 1px;
   position: absolute;
   background-image: var(--inner-gradient);
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: var(--mise-profile-card-inner);
   transform: translate3d(0, 0, 0.01px);
 }
 

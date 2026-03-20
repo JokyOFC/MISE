@@ -13,7 +13,10 @@
     const grainUrl = computed(() => aboutConfig.value.profile.grainUrl || grainImg);
 
     const handleContactClick = () => {
-        console.log('Contact button clicked!');
+        const handle = aboutConfig.value.profile.handle;
+        if (handle) {
+            window.open(`https://github.com/${handle}`, '_blank', 'noopener,noreferrer');
+        }
     };
 </script>
 
@@ -57,7 +60,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0b0b0b;
+  background-color: var(--mise-bg);
   padding: 3rem 7vw;
   box-sizing: border-box;
   gap: 2.5rem;
@@ -76,7 +79,7 @@
 .about-title {
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 600;
-  color: white;
+  color: var(--mise-text-heading);
   margin: 0;
 }
 
@@ -90,21 +93,21 @@
   font-size: clamp(0.95rem, 1.8vw, 1.15rem);
   line-height: 1.7;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--mise-text);
   text-align: left;
   margin: 0;
 }
 
 .about-text strong {
-  color: white;
+  color: var(--mise-text-heading);
   font-weight: 600;
 }
 
 .about-text--highlight {
-  color: white;
+  color: var(--mise-text-heading);
   font-weight: 500;
   padding-left: 1rem;
-  border-left: 3px solid rgba(255, 255, 255, 0.4);
+  border-left: 3px solid var(--mise-about-highlight-border);
 }
 
 .profile-card-container {

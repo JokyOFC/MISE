@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Doce Mundo Confectionery",
+    "description": "Portfolio with image gallery built for Doce Mundo confectionery, showcasing products and associated brands. Clean, responsive interface built with HTML, CSS, and JavaScript.",
+    "icon": "pi pi-circle-fill",
+    "technologies": ["HTML5", "CSS3", "JavaScript"]
+  },
+  {
+    "id": 2,
+    "name": "CineFlix",
+    "description": "Modern streaming platform for movies and series, developed as a personal project. Integrates APIs for film information (IMDB), streaming technology, and a fluid interface. Stack: Vite, React, TypeScript, and other modern tools.",
+    "icon": "pi pi-code",
+    "technologies": ["Vite", "React", "TypeScript", "IMDB API"]
+  },
+  {
+    "id": 3,
+    "name": "Software Engineer Portfolio",
+    "description": "Personal presentation site with about, projects, experiences, and contact sections. Responsive design with fluid animations (GSAP), light/dark theme support, and internationalization (pt-BR/en).",
+    "icon": "pi pi-sliders-h",
+    "technologies": ["Vue.js", "TypeScript", "Vite", "GSAP", "Tailwind CSS", "Vue Router"]
+  }
+]

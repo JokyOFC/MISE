@@ -1,23 +1,32 @@
 <script setup lang="ts">
   import { computed, onMounted, onUnmounted } from 'vue';
+  import { useI18n } from 'vue-i18n';
   import Header from '../components/Header.vue';
   import StaggeredMenu from '../components/StaggeredMenu/StaggeredMenu.vue';
-  import logoUrl from '../assets/logo.svg';
+  import { useBrandedLogo } from '../composables/useBrandedLogo';
   import About from '../components/About.vue';
   import Projects from '../components/Projects.vue';
   import Experiences from '../components/Experiences.vue';
   import Footer from '../components/Footer.vue';
   import { useFooter } from '../composables/useStrapiData';
+  import { useTheme } from '../composables/useTheme';
 
+  const { t } = useI18n();
   const { config: footerConfig } = useFooter();
+  const { isDark, menuChrome } = useTheme();
+  const logoUrl = useBrandedLogo();
 
-  const menuItems = [
-    { label: 'Inicio', ariaLabel: 'Go to home page', link: '#inicio' },
-    { label: 'Sobre', ariaLabel: 'Learn about us', link: '#sobre' },
-    { label: 'Projetos', ariaLabel: 'View our services', link: '#projetos' },
-    { label: 'Experiências', ariaLabel: 'View professional experiences', link: '#experiencias' },
-    { label: 'Contato', ariaLabel: 'Get in touch', link: '#contato' }
-  ]
+  const menuPrelayers = computed(() =>
+    isDark.value ? ['#0A2F36', '#0F4C5C'] : ['#e2e8f0', '#cbd5e1']
+  );
+
+  const menuItems = computed(() => [
+    { label: t('nav.home'), ariaLabel: t('nav.ariaHome'), link: '#inicio' },
+    { label: t('nav.about'), ariaLabel: t('nav.ariaAbout'), link: '#sobre' },
+    { label: t('nav.projects'), ariaLabel: t('nav.ariaProjects'), link: '#projetos' },
+    { label: t('nav.experiences'), ariaLabel: t('nav.ariaExperiences'), link: '#experiencias' },
+    { label: t('nav.contact'), ariaLabel: t('nav.ariaContact'), link: '#contato' },
+  ]);
   
   const scrollToSection = (sectionId: string) => {
     const element = document.querySelector(sectionId);
@@ -74,10 +83,10 @@
      :social-items="socialItems"
      :display-socials="true"
      :display-item-numbering="true"
-     menu-button-color="#fff"
-     open-menu-button-color="#000"
+     :menu-button-color="menuChrome.menuButton"
+     :open-menu-button-color="menuChrome.menuOpen"
      :change-menu-color-on-open="true"
-     :colors="['#0A2F36', '#0F4C5C']"
+     :colors="menuPrelayers"
      :logo-url="logoUrl"
      accent-color="#0F4C5C"
      @menu-open="handleMenuOpen"
@@ -137,7 +146,7 @@
   max-width: 100%;
   min-height: 100vh;
   z-index: 2;
-  background-color: #0b0b0b;
+  background-color: var(--mise-bg);
   overflow: visible;
   scroll-snap-align: center;
   scroll-snap-stop: always;
@@ -150,8 +159,9 @@
   height: 100vh;
   min-height: 100vh;
   max-height: 100vh;
-  z-index: 2;
-  background-color: #000;
+  margin-bottom: -20vh;
+  z-index: 3;
+  background-color: var(--mise-bg-deep);
   overflow: visible;
   scroll-snap-align: center;
   scroll-snap-stop: always;
@@ -162,8 +172,9 @@
   width: 100%;
   max-width: 100%;
   min-height: 100vh;
+  padding-top: 20vh;
   z-index: 2;
-  background-color: #000;
+  background-color: var(--mise-bg-deep);
   overflow: visible;
   scroll-snap-align: center;
   scroll-snap-stop: always;
@@ -184,7 +195,7 @@
   width: 100%;
   max-width: 100%;
   z-index: 2;
-  background-color: #0b0b0b;
+  background-color: var(--mise-bg);
   padding: 4rem 0 2rem;
   overflow: visible;
 }

@@ -1,0 +1,128 @@
+/* Tokens semânticos: html[data-theme="dark"|"light"] definido por applyDocumentTheme + script inline no index. */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --mise-bg: #0b0b0b;
+  --mise-bg-deep: #000000;
+  --mise-bg-elevated: #111827;
+  --mise-text: rgba(255, 255, 255, 0.92);
+  --mise-text-heading: #ffffff;
+  --mise-text-muted: #94a3b8;
+  --mise-accent: #0f4c5c;
+  --mise-accent-hover: #0a2f36;
+  --mise-border: rgba(148, 163, 184, 0.25);
+  --mise-border-strong: rgba(148, 163, 184, 0.45);
+  --mise-surface-glass: rgba(255, 255, 255, 0.02);
+  --mise-link-hover: #0fdfb3;
+
+  --mise-scrollbar-track: #0b0b0b;
+  --mise-scrollbar-thumb: #0f4c5c;
+  --mise-scrollbar-thumb-hover: #0a2f36;
+
+  --mise-selection-bg: #0f4c5c;
+  --mise-selection-color: #fff;
+
+  --mise-themed-img-filter: none;
+
+  --mise-square-border: rgb(30, 30, 30);
+  --mise-square-hover: #0f4c5c;
+
+  --mise-dot-base: #0b0b0b;
+  --mise-dot-active: #0f4c5c;
+
+  --mise-header-title-accent: #0f4c5c;
+  --mise-header-text-on-hero: #ffffff;
+
+  --mise-menu-panel-bg: #ffffff;
+  --mise-menu-panel-text: #000000;
+  --mise-menu-prelayer-1: #0a2f36;
+  --mise-menu-prelayer-2: #0f4c5c;
+  --mise-menu-social: #111111;
+
+  --mise-project-card-header: linear-gradient(to top, #222222, #0b0b0b);
+  --mise-project-card-border: #ffffff;
+  --mise-project-pill-bg: rgba(255, 255, 255, 0.12);
+  --mise-project-pill-border: rgba(255, 255, 255, 0.25);
+
+  --mise-profile-card-inner: rgba(0, 0, 0, 0.9);
+  --mise-about-highlight-border: rgba(255, 255, 255, 0.4);
+
+  --mise-login-bg: linear-gradient(135deg, #0a2f36 0%, #0f4c5c 100%);
+
+  --mise-exp-line-top: rgba(255, 255, 255, 0.2);
+  --mise-exp-line-mid: rgba(255, 255, 255, 0.55);
+  --mise-exp-line-bot: rgba(255, 255, 255, 0.15);
+  --mise-exp-card-bg: radial-gradient(circle at top left, #1c3a4b 0, #050608 55%, #050608 100%);
+  --mise-exp-card-border: rgba(255, 255, 255, 0.09);
+  --mise-exp-card-shadow: rgba(0, 0, 0, 0.7);
+  --mise-exp-dot-ring: #ffffff;
+  --mise-exp-pill-bg: rgba(255, 255, 255, 0.12);
+  --mise-exp-pill-border: rgba(255, 255, 255, 0.22);
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --mise-bg: #f1f5f9;
+  --mise-bg-deep: #e2e8f0;
+  --mise-bg-elevated: #ffffff;
+  --mise-text: #1e293b;
+  --mise-text-heading: #0f172a;
+  --mise-text-muted: #64748b;
+  --mise-accent: #0f4c5c;
+  --mise-accent-hover: #0a2f36;
+  --mise-border: rgba(15, 23, 42, 0.12);
+  --mise-border-strong: rgba(15, 23, 42, 0.22);
+  --mise-surface-glass: rgba(255, 255, 255, 0.72);
+  --mise-link-hover: #0b7a93;
+
+  --mise-scrollbar-track: #e2e8f0;
+  --mise-scrollbar-thumb: #0f4c5c;
+  --mise-scrollbar-thumb-hover: #0a2f36;
+
+  --mise-selection-bg: #0f4c5c;
+  --mise-selection-color: #fff;
+
+  /* Ajuste visível em screenshots / logos no painel claro */
+  --mise-themed-img-filter: brightness(0.98) contrast(1.06) saturate(1.05);
+
+  --mise-square-border: rgb(203, 213, 225);
+  --mise-square-hover: #0f4c5c;
+
+  --mise-dot-base: #e2e8f0;
+  --mise-dot-active: #0f4c5c;
+
+  --mise-header-title-accent: #0f4c5c;
+  --mise-header-text-on-hero: #0f172a;
+
+  --mise-menu-panel-bg: #ffffff;
+  --mise-menu-panel-text: #0f172a;
+  --mise-menu-prelayer-1: #cbd5e1;
+  --mise-menu-prelayer-2: #94a3b8;
+  --mise-menu-social: #334155;
+
+  --mise-project-card-header: linear-gradient(to top, #f8fafc, #e2e8f0);
+  --mise-project-card-border: #0f172a;
+  --mise-project-pill-bg: rgba(15, 23, 42, 0.06);
+  --mise-project-pill-border: rgba(15, 23, 42, 0.15);
+
+  --mise-profile-card-inner: rgba(248, 250, 252, 0.96);
+  --mise-about-highlight-border: rgba(15, 23, 42, 0.25);
+
+  --mise-login-bg: linear-gradient(135deg, #e0f2f4 0%, #cbd5e1 100%);
+
+  --mise-exp-line-top: rgba(15, 23, 42, 0.12);
+  --mise-exp-line-mid: rgba(15, 23, 42, 0.28);
+  --mise-exp-line-bot: rgba(15, 23, 42, 0.1);
+  --mise-exp-card-bg: linear-gradient(155deg, #ffffff 0%, #e2e8f0 100%);
+  --mise-exp-card-border: rgba(15, 23, 42, 0.12);
+  --mise-exp-card-shadow: rgba(15, 23, 42, 0.12);
+  --mise-exp-dot-ring: #ffffff;
+  --mise-exp-pill-bg: rgba(15, 23, 42, 0.06);
+  --mise-exp-pill-border: rgba(15, 23, 42, 0.15);
+}
+
+img.mise-themed-graphic {
+  filter: var(--mise-themed-img-filter);
+}

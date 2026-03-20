@@ -1,9 +1,9 @@
 <template>
   <footer class="footer" :data-variant="variant">
-    <div v-if="variant === 'full'" class="footer-main">
+      <div v-if="variant === 'full'" class="footer-main">
       <div class="footer-cta">
-        <p class="footer-cta-label">Contato</p>
-        <h2 class="footer-title">Vamos trabalhar juntos?</h2>
+        <p class="footer-cta-label">{{ t('footer.contactLabel') }}</p>
+        <h2 class="footer-title">{{ t('footer.title') }}</h2>
         <p class="footer-text">
           {{ ctaText }}
         </p>
@@ -14,12 +14,12 @@
           class="footer-button"
           @click="handleContactClick"
         >
-          Entrar em contato
+          {{ t('footer.ctaButton') }}
         </Button>
       </div>
 
       <div v-if="socialLinks.length" class="footer-socials">
-        <span class="footer-socials-title">Redes</span>
+        <span class="footer-socials-title">{{ t('footer.networks') }}</span>
         <ul class="footer-socials-list">
           <li
             v-for="social in socialLinks"
@@ -50,9 +50,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 import Button from './Button/Button.vue';
 import { useFooter } from '../composables/useStrapiData';
+
+const { t } = useI18n();
 
 interface FooterProps {
   variant?: 'full' | 'minimal';
@@ -82,8 +85,8 @@ const handleContactClick = () => {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  background: #0b0b0b;
-  color: #f8fafc;
+  background: var(--mise-bg);
+  color: var(--mise-text-heading);
 }
 
 .footer-main {
@@ -107,7 +110,7 @@ const handleContactClick = () => {
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.9);
+  color: var(--mise-text-muted);
 }
 
 .footer-title {
@@ -122,7 +125,7 @@ const handleContactClick = () => {
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.65;
-  color: rgba(226, 232, 240, 0.85);
+  color: var(--mise-text);
 }
 
 .footer-button {
@@ -142,7 +145,7 @@ const handleContactClick = () => {
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.9);
+  color: var(--mise-text-muted);
 }
 
 .footer-socials-list {
@@ -161,13 +164,13 @@ const handleContactClick = () => {
 .footer-social-link {
   display: inline-block;
   font-size: 0.9375rem;
-  color: rgba(226, 232, 240, 0.9);
+  color: var(--mise-text);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-social-link:hover {
-  color: #0f4c5c;
+  color: var(--mise-accent);
 }
 
 .footer-bottom {
@@ -181,13 +184,13 @@ const handleContactClick = () => {
   display: block;
   max-width: 110rem;
   margin: 0 auto 1.5rem;
-  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  border-top: 1px solid var(--mise-border);
 }
 
 .footer-copy {
   margin: 0;
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: var(--mise-text-muted);
 }
 
 .footer[data-variant='minimal'] {

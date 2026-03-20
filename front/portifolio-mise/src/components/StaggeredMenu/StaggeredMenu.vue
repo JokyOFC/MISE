@@ -28,13 +28,13 @@
 
       <header
         class="top-0 left-0 z-20 absolute flex justify-between items-center p-[3em] w-full pointer-events-none staggered-menu-header"
-        aria-label="Main navigation header"
+        :aria-label="t('nav.mainNavAria')"
       >
         <div class="staggered-menu-header__content">
           <RouterLink
             to="/"
             class="flex items-center pointer-events-auto select-none sm-logo"
-            aria-label="Ir para a Home"
+            :aria-label="t('nav.logoHome')"
           >
             <img
               :src="logoUrl || defaultLogoUrl"
@@ -46,10 +46,15 @@
             />
           </RouterLink>
 
-          <button
+          <div
+            class="relative z-[51] shrink-0 sm-header-actions pointer-events-auto"
+            :style="{ color: open ? openMenuButtonColor : menuButtonColor }"
+          >
+            <LanguageSwitcher />
+            <button
             ref="toggleBtnRef"
-            class="inline-flex relative items-center gap-[0.3rem] bg-transparent border-0 overflow-visible font-medium text-[#e9e9ef] leading-none cursor-pointer pointer-events-auto sm-toggle"
-            :aria-label="open ? 'Close menu' : 'Open menu'"
+            class="inline-flex relative items-center gap-[0.3rem] bg-transparent border-0 overflow-visible font-medium leading-none cursor-pointer pointer-events-auto sm-toggle"
+            :aria-label="open ? t('nav.ariaCloseMenu') : t('nav.ariaOpenMenu')"
             :aria-expanded="open"
             aria-controls="staggered-menu-panel"
             @click="toggleMenu"
@@ -82,13 +87,14 @@
               />
             </span>
           </button>
+          </div>
         </div>
       </header>
 
       <aside
         id="staggered-menu-panel"
         ref="panelRef"
-        class="top-0 right-0 z-10 absolute flex flex-col bg-white backdrop-blur-[12px] p-[6em_2em_3em_2em] h-full overflow-y-auto staggered-menu-panel"
+        class="top-0 right-0 z-10 absolute flex flex-col backdrop-blur-[12px] h-full overflow-y-auto staggered-menu-panel"
         style="webkit-backdrop-filter: blur(12px)"
         :aria-hidden="!open"
       >
@@ -102,10 +108,10 @@
               v-if="items && items.length"
               v-for="(item, idx) in items"
               :key="item.label + idx"
-              class="relative overflow-hidden leading-none sm-panel-itemWrap"
+              class="relative leading-none sm-panel-itemWrap"
             >
               <a
-                class="inline-block relative pr-[1.4em] font-semibold text-[4rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
+                class="inline-block relative font-semibold no-underline uppercase leading-none transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
                 :href="item.link"
                 :aria-label="item.ariaLabel"
                 :data-index="idx + 1"
@@ -115,35 +121,41 @@
                 </span>
               </a>
             </li>
-            <li v-else class="relative overflow-hidden leading-none sm-panel-itemWrap" aria-hidden="true">
+            <li v-else class="relative leading-none sm-panel-itemWrap" aria-hidden="true">
               <span
-                class="inline-block relative pr-[1.4em] font-semibold text-[4rem] text-black no-underline uppercase leading-none tracking-[-2px] transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
+                class="inline-block relative font-semibold no-underline uppercase leading-none transition-[background,color] duration-150 ease-linear cursor-pointer sm-panel-item"
               >
                 <span class="inline-block will-change-transform sm-panel-itemLabel [transform-origin:50%_100%]">
-                  No items
+                  {{ t('nav.noItems') }}
                 </span>
               </span>
             </li>
           </ul>
 
-          <div
-            v-if="displaySocials && socialItems && socialItems.length > 0"
-            class="flex flex-col gap-3 mt-auto pt-8 sm-socials"
-            aria-label="Social links"
-          >
-            <h3 class="m-0 font-medium text-base sm-socials-title [color:var(--sm-accent,#ff0000)]">Socials</h3>
-            <ul class="flex flex-row flex-wrap items-center gap-4 m-0 p-0 list-none sm-socials-list" role="list">
-              <li v-for="(social, i) in socialItems" :key="social.label + i" class="sm-socials-item">
-                <a
-                  :href="social.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block relative py-[2px] font-medium text-[#111] text-[1.2rem] no-underline transition-[color,opacity] duration-300 ease-linear sm-socials-link"
-                >
-                  {{ social.label }}
-                </a>
-              </li>
-            </ul>
+          <div class="sm-panel-footer">
+            <div class="sm-panel-theme">
+              <ThemeSwitch />
+            </div>
+
+            <div
+              v-if="displaySocials && socialItems && socialItems.length > 0"
+              class="flex flex-col gap-3 sm-socials"
+              aria-label="Social links"
+            >
+              <h3 class="m-0 font-medium text-base sm-socials-title [color:var(--sm-accent,#ff0000)]">Socials</h3>
+              <ul class="flex flex-row flex-wrap items-center gap-4 m-0 p-0 list-none sm-socials-list" role="list">
+                <li v-for="(social, i) in socialItems" :key="social.label + i" class="sm-socials-item">
+                  <a
+                    :href="social.link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-block relative py-[2px] font-medium text-[1.2rem] no-underline transition-[color,opacity] duration-300 ease-linear sm-socials-link"
+                  >
+                    {{ social.label }}
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </aside>
@@ -154,7 +166,13 @@
 <script setup lang="ts">
 import { gsap } from 'gsap';
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import defaultLogoUrl from '../../assets/logo.svg';
+import ThemeSwitch from '../ThemeSwitch/ThemeSwitch.vue';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher.vue';
+import { useTheme } from '../../composables/useTheme';
+
+const { t, locale } = useI18n();
 
 export interface StaggeredMenuItem {
   label: string;
@@ -199,6 +217,8 @@ const props = withDefaults(defineProps<StaggeredMenuProps>(), {
 const open = ref(false);
 const openRef = ref(false);
 
+const { menuChrome } = useTheme();
+
 const headerScrolled = ref(false);
 const SCROLL_THRESHOLD = 30;
 const HEADER_TRANSITION = '0.4s ease';
@@ -208,12 +228,12 @@ const headerTransparentStyle = {
   WebkitBackdropFilter: 'none',
   transition: `background ${HEADER_TRANSITION}, backdrop-filter ${HEADER_TRANSITION}, -webkit-backdrop-filter ${HEADER_TRANSITION}`
 };
-const headerBlurStyle = {
-  background: 'rgba(0, 0, 0, 0.4)',
+const headerBlurStyle = computed(() => ({
+  background: menuChrome.value.headerBlur,
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
   transition: `background ${HEADER_TRANSITION}, backdrop-filter ${HEADER_TRANSITION}, -webkit-backdrop-filter ${HEADER_TRANSITION}`
-};
+}));
 
 const getScrollTop = () => {
   if (typeof window === 'undefined') return 0;
@@ -279,7 +299,38 @@ const plusVRef = useTemplateRef('plusVRef');
 const iconRef = useTemplateRef('iconRef');
 
 const textInnerRef = useTemplateRef('textInnerRef');
-const textLines = ref<string[]>(['Menu', 'Close']);
+const textLines = ref<string[]>([t('nav.menuLabel'), t('nav.closeLabel')]);
+
+watch(locale, () => {
+  const menuL = t('nav.menuLabel');
+  const closeL = t('nav.closeLabel');
+  if (!openRef.value) {
+    textLines.value = [menuL, closeL];
+    nextTick(() => {
+      const inner = textInnerRef.value;
+      if (inner) gsap.set(inner, { yPercent: 0 });
+    });
+  }
+});
+
+/** Quando items mudam (ex.: troca de idioma) com menu aberto, os novos nós não passaram pela animação — garantir que os números fiquem visíveis. */
+watch(
+  () => props.items,
+  () => {
+    if (openRef.value && panelRef.value) {
+      nextTick(() => {
+        const panel = panelRef.value;
+        if (!panel) return;
+        const numberEls = Array.from(
+          panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item')
+        ) as HTMLElement[];
+        if (numberEls.length) {
+          gsap.set(numberEls, { ['--sm-num-opacity' as keyof Record<string, number>]: 1 });
+        }
+      });
+    }
+  }
+);
 
 const openTlRef = ref<gsap.core.Timeline | null>(null);
 const closeTweenRef = ref<gsap.core.Tween | null>(null);
@@ -523,14 +574,16 @@ const animateText = (opening: boolean) => {
 
   textCycleAnimRef.value?.kill();
 
-  const valueLabel = opening ? 'Menu' : 'Close';
-  const targetLabel = opening ? 'Close' : 'Menu';
+  const menuL = t('nav.menuLabel');
+  const closeL = t('nav.closeLabel');
+  const valueLabel = opening ? menuL : closeL;
+  const targetLabel = opening ? closeL : menuL;
   const cycles = 3;
 
   const seq: string[] = [valueLabel];
   let last = valueLabel;
   for (let i = 0; i < cycles; i++) {
-    last = last === 'Menu' ? 'Close' : 'Menu';
+    last = last === menuL ? closeL : menuL;
     seq.push(last);
   }
   if (last !== targetLabel) seq.push(targetLabel);
@@ -581,8 +634,11 @@ watch(
   }
 );
 
+// Só reinicializa o layout GSAP quando a posição muda. `menuButtonColor` / `colors`
+// mudam com o tema: reverter o contexto aqui recolocava o painel off-screen sem
+// atualizar `open`, deixando `data-open` ativo e a UI travada.
 watch(
-  () => [props.menuButtonColor, props.position],
+  () => props.position,
   () => {
     nextTick(() => {
       if (gsapContext) {
@@ -690,7 +746,7 @@ onBeforeUnmount(() => {
 }
 
 .sm-scope .staggered-menu-header__backdrop.staggered-menu-header--blur {
-  background: rgba(0, 0, 0, 0.25);
+  background: color-mix(in srgb, var(--mise-bg-deep) 40%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -699,20 +755,37 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 50;
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  max-width: 100%;
   pointer-events: auto;
+  gap: 1rem;
 }
 
 .sm-scope .staggered-menu-header__content > * {
   pointer-events: auto;
 }
 
+/* Globo à esquerda do “Menu +”, sempre em linha (evita empilhar em viewports estreitos) */
+.sm-scope .sm-header-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
 .sm-scope .sm-logo {
   display: flex;
   align-items: center;
   user-select: none;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .sm-scope .sm-logo-img {
@@ -736,6 +809,7 @@ onBeforeUnmount(() => {
   overflow: visible;
   white-space: nowrap;
   z-index: 51;
+  flex-shrink: 0;
 }
 
 .sm-scope .sm-toggle:focus-visible {
@@ -787,6 +861,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   line-height: 1;
   width: 100%;
+  max-width: 100%;
   text-align: left;
 }
 
@@ -810,16 +885,18 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   right: 0;
-  width: clamp(260px, 38vw, 420px);
+  /* Mais largo para a esquerda: títulos longos (ex. Experiências) sem cortar */
+  width: clamp(280px, 46vw, 520px);
   height: 100vh;
   min-height: 100vh;
   max-height: 100vh;
-  background: white;
+  background: var(--mise-menu-panel-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   padding: 6em 2em 3em 2em;
+  /* Com overflow-y ≠ visible, overflow-x:visible vira auto e aparece barra horizontal */
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 10;
@@ -836,7 +913,7 @@ onBeforeUnmount(() => {
   top: 0;
   right: 0;
   bottom: 0;
-  width: clamp(260px, 38vw, 420px);
+  width: clamp(280px, 46vw, 520px);
   height: 100vh;
   min-height: 100vh;
   pointer-events: none;
@@ -866,9 +943,29 @@ onBeforeUnmount(() => {
   align-items: flex-start;
 }
 
-.sm-scope .sm-socials {
+.sm-scope .sm-panel-footer {
   margin-top: auto;
   padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+  width: 100%;
+  align-self: stretch;
+}
+
+.sm-scope .sm-panel-theme {
+  width: 100%;
+  align-self: stretch;
+  color: var(--mise-menu-panel-text);
+}
+
+.sm-scope .sm-panel-theme :deep(.mise-theme-switch__track),
+.sm-scope .sm-panel-theme :deep(.mise-theme-switch__segment-text) {
+  color: var(--mise-menu-panel-text);
+}
+
+.sm-scope .sm-socials {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -922,7 +1019,7 @@ onBeforeUnmount(() => {
 .sm-scope .sm-socials-link {
   font-size: 1.2rem;
   font-weight: 500;
-  color: #111;
+  color: var(--mise-menu-social);
   text-decoration: none;
   position: relative;
   padding: 2px 0;
@@ -957,19 +1054,22 @@ onBeforeUnmount(() => {
 
 .sm-scope .sm-panel-item {
   position: relative;
-  color: #000;
+  color: var(--mise-menu-panel-text);
   font-weight: 600;
   font-size: 4rem;
   cursor: pointer;
   line-height: 1;
-  letter-spacing: -2px;
+  letter-spacing: -0.04em;
   text-transform: uppercase;
   transition:
     background 0.25s,
     color 0.25s;
   display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
   text-decoration: none;
-  padding-right: 1.4em;
+  /* Coluna fixa em rem para o índice (evita overlap: em do título é enorme) */
+  padding-right: 2.75rem;
 }
 
 .sm-scope .sm-panel-itemLabel {
@@ -990,14 +1090,16 @@ onBeforeUnmount(() => {
   counter-increment: smItem;
   content: counter(smItem, decimal-leading-zero);
   position: absolute;
-  top: 0.1em;
-  right: 3.2em;
+  top: 0.12em;
+  /* Dentro da faixa padding-right (rem), sem usar em do título */
+  right: 0.4rem;
   font-size: 18px;
   font-weight: 400;
   color: var(--sm-accent, #ff0000);
   letter-spacing: 0;
   pointer-events: none;
   user-select: none;
+  white-space: nowrap;
   opacity: var(--sm-num-opacity, 0);
 }
 
@@ -1006,9 +1108,33 @@ onBeforeUnmount(() => {
     width: 100%;
     left: 0;
     right: 0;
+    overflow-x: hidden;
+    /* Mais espaço útil à direita do texto (títulos longos) */
+    padding: 6em 1.25em 3em 1.75em;
   }
-  .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
+
+  .sm-scope .sm-prelayers {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .sm-scope .sm-panel-item {
+    font-size: clamp(2rem, 7.25vw, 3.5rem);
+    letter-spacing: -0.045em;
+    padding-right: 2.5rem;
+  }
+
+  .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after {
+    right: 0.35rem;
+    font-size: clamp(14px, 3.2vw, 17px);
+  }
+
+  html[data-theme='dark'] .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
     filter: invert(100%);
+  }
+  html[data-theme='light'] .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
+    filter: none;
   }
   .sm-scope .sm-logo-img {
     height: 28px;
@@ -1036,9 +1162,32 @@ onBeforeUnmount(() => {
     width: 100%;
     left: 0;
     right: 0;
+    overflow-x: hidden;
+    padding: 5.5em 1em 2.5em 1.5em;
   }
-  .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
+
+  .sm-scope .sm-prelayers {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+
+  .sm-scope .sm-panel-item {
+    /* Telas estreitas: “EXPERIÊNCIAS” cabe sem scroll horizontal */
+    font-size: clamp(1.85rem, 6.75vw, 3rem);
+    letter-spacing: -0.055em;
+    padding-right: 2.35rem;
+  }
+
+  .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after {
+    right: 0.3rem;
+    font-size: 14px;
+  }
+  html[data-theme='dark'] .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
     filter: invert(100%);
+  }
+  html[data-theme='light'] .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img {
+    filter: none;
   }
   .sm-scope .sm-logo-img {
     height: 22px;

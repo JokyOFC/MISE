@@ -10,6 +10,15 @@ const STRAPI_URL = typeof import.meta !== 'undefined' && import.meta.env?.VITE_S
 
 export const isStrapiEnabled = (): boolean => Boolean(STRAPI_URL);
 
+/** Locale de conteúdo no Strapi (plugin i18n). Sem plugin, o parâmetro costuma ser ignorado. */
+export type StrapiContentLocale = 'pt-BR' | 'en';
+
+function withLocale(path: string, locale?: StrapiContentLocale): string {
+  if (!locale) return path;
+  const q = `locale=${encodeURIComponent(locale)}`;
+  return path.includes('?') ? `${path}&${q}` : `${path}?${q}`;
+}
+
 async function strapiFetch<T>(endpoint: string): Promise<T> {
   if (!STRAPI_URL) throw new Error('Strapi URL not configured');
   const res = await fetch(`${STRAPI_URL}${endpoint}`, {
@@ -63,8 +72,10 @@ function mapStrapiExperienceToExperience(d: StrapiExperience, index: number): Ex
   };
 }
 
-export async function fetchExperiences(): Promise<Experience[]> {
-  const res = await strapiFetch<StrapiCollectionResponse<StrapiExperience>>('/api/experiences?sort[0]=createdAt:desc');
+export async function fetchExperiences(locale?: StrapiContentLocale): Promise<Experience[]> {
+  const res = await strapiFetch<StrapiCollectionResponse<StrapiExperience>>(
+    withLocale('/api/experiences?sort[0]=createdAt:desc', locale)
+  );
   const list = res.data ?? [];
   return list.map(mapStrapiExperienceToExperience);
 }
@@ -83,8 +94,10 @@ export interface HowCanIHelpConfig {
   services: Array<{ title: string; description: string; icon: string }>;
 }
 
-export async function fetchHowCanIHelp(): Promise<HowCanIHelpConfig> {
-  const res = await strapiFetch<StrapiSingleResponse<StrapiHowCanIHelp>>('/api/how-can-i-helps');
+export async function fetchHowCanIHelp(locale?: StrapiContentLocale): Promise<HowCanIHelpConfig> {
+  const res = await strapiFetch<StrapiSingleResponse<StrapiHowCanIHelp>>(
+    withLocale('/api/how-can-i-helps', locale)
+  );
   const d = res.data;
   if (!d) {
     return {
@@ -112,8 +125,8 @@ export interface FooterConfig {
   copyright: string;
 }
 
-export async function fetchFooter(): Promise<FooterConfig> {
-  const res = await strapiFetch<StrapiSingleResponse<StrapiFooter>>('/api/footers');
+export async function fetchFooter(locale?: StrapiContentLocale): Promise<FooterConfig> {
+  const res = await strapiFetch<StrapiSingleResponse<StrapiFooter>>(withLocale('/api/footers', locale));
   const d = res.data;
   const rawLinks = Array.isArray(d?.socialLinks) ? d.socialLinks : [];
   return {
@@ -143,8 +156,8 @@ export interface HeaderConfig {
   buttons: Array<{ label: string; url: string }>;
 }
 
-export async function fetchHeader(): Promise<HeaderConfig> {
-  const res = await strapiFetch<StrapiSingleResponse<StrapiHeader>>('/api/headers');
+export async function fetchHeader(locale?: StrapiContentLocale): Promise<HeaderConfig> {
+  const res = await strapiFetch<StrapiSingleResponse<StrapiHeader>>(withLocale('/api/headers', locale));
   const d = res.data;
   if (!d)
     return {
@@ -208,9 +221,12 @@ function resolveMediaUrl(obj: { url?: string } | null | undefined): string {
   return u.startsWith('http') ? u : `${STRAPI_URL}${u}`;
 }
 
-export async function fetchAbout(): Promise<AboutConfig> {
+export async function fetchAbout(locale?: StrapiContentLocale): Promise<AboutConfig> {
   const res = await strapiFetch<StrapiSingleResponse<StrapiAbout>>(
-    '/api/abouts?populate[profile][populate][avatar]=*&populate[profile][populate][icon]=*&populate[profile][populate][grain]=*'
+    withLocale(
+      '/api/abouts?populate[profile][populate][avatar]=*&populate[profile][populate][icon]=*&populate[profile][populate][grain]=*',
+      locale
+    )
   );
   const d = res.data;
   if (!d)
@@ -276,9 +292,9 @@ function mapStrapiProjectToProject(d: StrapiProject, index: number): Project {
   };
 }
 
-export async function fetchProjects(): Promise<Project[]> {
+export async function fetchProjects(locale?: StrapiContentLocale): Promise<Project[]> {
   const res = await strapiFetch<StrapiCollectionResponse<StrapiProject>>(
-    '/api/projects?sort[0]=order:asc&sort[1]=createdAt:desc&populate[image]=*'
+    withLocale('/api/projects?sort[0]=order:asc&sort[1]=createdAt:desc&populate[image]=*', locale)
   );
   const list = res.data ?? [];
   return list.map(mapStrapiProjectToProject);

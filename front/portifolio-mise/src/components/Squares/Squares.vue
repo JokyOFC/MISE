@@ -18,6 +18,8 @@ interface Props {
   borderColor?: CanvasStrokeStyle;
   squareSize?: number;
   hoverFillColor?: CanvasStrokeStyle;
+  /** Cor do vinheta radial nas bordas (alinhada ao fundo da página no tema claro/escuro). */
+  vignetteEdgeColor?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,7 +27,8 @@ const props = withDefaults(defineProps<Props>(), {
   speed: 1,
   borderColor: '#999',
   squareSize: 40,
-  hoverFillColor: '#222'
+  hoverFillColor: '#222',
+  vignetteEdgeColor: '#0b0b0b'
 });
 
 const canvasRef = useTemplateRef<HTMLCanvasElement>('canvasRef');
@@ -84,7 +87,7 @@ const drawGrid = () => {
     Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2
   );
   gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-  gradient.addColorStop(1, '#0b0b0b');
+  gradient.addColorStop(1, props.vignetteEdgeColor);
 
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -189,7 +192,8 @@ watch(
     () => props.speed,
     () => props.borderColor,
     () => props.hoverFillColor,
-    () => props.squareSize
+    () => props.squareSize,
+    () => props.vignetteEdgeColor
   ],
   () => {
     cleanup();

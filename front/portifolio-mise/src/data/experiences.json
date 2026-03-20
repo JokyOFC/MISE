@@ -5,8 +5,8 @@
     "role": "Freelancer",
     "period": "2025 - Atual",
     "location": "Remoto",
-    "description": "Responsável pelo desenvolvimento de interfaces responsivas, animações e integração com APIs REST em projetos de alto impacto.",
-    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP"]
+    "description": "Desenvolvimento de soluções digitais sob medida, com foco nas necessidades do cliente e na entrega de valor ao produto.",
+    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP", "React Native", "IOS", "Android", "React"]
   },
   {
     "id": 1,
@@ -14,8 +14,8 @@
     "role": "Engenheiro de Software",
     "period": "2025 - Atual",
     "location": "Remoto",
-    "description": "Responsável pelo desenvolvimento de interfaces responsivas, animações e integração com APIs REST em projetos de alto impacto.",
-    "technologies": ["Vue.js", "TypeScript", "JavaScript", "SCSS", "GSAP"]
+    "description": "Responsável pelo desenvolvimento de interfaces responsivas, aplicações mobile e integração com APIs REST em projetos de alto impacto.",
+    "technologies": ["React Native", "IOS", "Android", "TypeScript", "JavaScript", "PHP", "MySQL"]
   },
   {
     "id": 2,

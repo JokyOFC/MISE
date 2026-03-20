@@ -15,16 +15,17 @@
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: #0b0b0b;
+  background-color: var(--mise-bg);
+  color: var(--mise-text);
 }
 
 ::selection {
-  background-color: #0F4C5C;
-  color: #fff;
+  background-color: var(--mise-selection-bg);
+  color: var(--mise-selection-color);
 }
 
 ::-moz-selection {
-  background-color: #0F4C5C;
-  color: #fff;
+  background-color: var(--mise-selection-bg);
+  color: var(--mise-selection-color);
 }
 </style>

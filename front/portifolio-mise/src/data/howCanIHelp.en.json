@@ -1,0 +1,43 @@
+{
+  "intro": {
+    "title": "How I can help",
+    "description": "End‑to‑end software development—from concept to delivery and maintenance. I work with mainstream technologies to build modern, performant, maintainable applications."
+  },
+  "techLogos": [
+    { "icon": "pi pi-code", "title": "Vue.js", "href": "https://vuejs.org" },
+    { "icon": "pi pi-desktop", "title": "React", "href": "https://react.dev" },
+    { "icon": "pi pi-server", "title": "Node.js", "href": "https://nodejs.org" },
+    { "icon": "pi pi-database", "title": "PostgreSQL", "href": "https://www.postgresql.org" },
+    { "icon": "pi pi-box", "title": "Docker", "href": "https://www.docker.com" },
+    { "icon": "pi pi-palette", "title": "Figma", "href": "https://www.figma.com" },
+    { "icon": "pi pi-bolt", "title": "TypeScript", "href": "https://www.typescriptlang.org" },
+    { "icon": "pi pi-cloud", "title": "REST APIs", "href": null }
+  ],
+  "services": [
+    {
+      "title": "Web development",
+      "description": "Responsive, accessible, optimized sites and apps. Modern frameworks like Vue and React for fast interfaces and a great user experience.",
+      "icon": "pi pi-globe"
+    },
+    {
+      "title": "System maintenance",
+      "description": "Bug fixes, legacy refactors, and continuous evolution of production systems—stability and gradual improvement without stopping the business.",
+      "icon": "pi pi-wrench"
+    },
+    {
+      "title": "Application deployment",
+      "description": "Staging and production environments, CI/CD pipelines, containers (Docker), and cloud setups to go live safely and scale.",
+      "icon": "pi pi-cloud-upload"
+    },
+    {
+      "title": "Interface design",
+      "description": "Prototyping and UI design aligned with your product. Figma for flows, components, and visual identity before development.",
+      "icon": "pi pi-palette"
+    },
+    {
+      "title": "APIs & integrations",
+      "description": "REST or GraphQL APIs and system integrations. Clear documentation and solid practices for reliable communication between services.",
+      "icon": "pi pi-link"
+    }
+  ]
+}
