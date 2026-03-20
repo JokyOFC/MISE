@@ -59,7 +59,7 @@
     "placeholders": {
       "firstName": "Seu nome",
       "lastName": "Seu sobrenome",
-      "email": "seuemail@exemplo.com",
+      "email": "seuemail{'@'}exemplo.com",
       "phone": "(00) 00000-0000",
       "project": "Compartilhe detalhes sobre o que você precisa, objetivos, prazos e qualquer informação importante."
     },
@@ -75,11 +75,11 @@
     "title": "Entrar",
     "subtitle": "Acesse sua conta para continuar",
     "email": "E-mail",
-    "emailPlaceholder": "seu@email.com",
+    "emailPlaceholder": "seu{'@'}email.com",
     "password": "Senha",
     "passwordPh": "••••••••",
     "submit": "Entrar",
-    "errorInvalid": "E-mail ou senha incorretos. Use admin@admin.com / 123456 para demo.",
+    "errorInvalid": "E-mail ou senha incorretos. Use admin{'@'}admin.com / 123456 para demo.",
     "backHome": "← Voltar para a página inicial",
     "navHome": "Início",
     "navContact": "Contato",

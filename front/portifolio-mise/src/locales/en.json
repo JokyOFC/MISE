@@ -59,7 +59,7 @@
     "placeholders": {
       "firstName": "Your first name",
       "lastName": "Your last name",
-      "email": "you@example.com",
+      "email": "you{'@'}example.com",
       "phone": "+1 555 000 0000",
       "project": "Share what you need, goals, timelines, and anything else that helps."
     },
@@ -75,11 +75,11 @@
     "title": "Sign in",
     "subtitle": "Access your account to continue",
     "email": "Email",
-    "emailPlaceholder": "you@example.com",
+    "emailPlaceholder": "you{'@'}example.com",
     "password": "Password",
     "passwordPh": "••••••••",
     "submit": "Sign in",
-    "errorInvalid": "Invalid email or password. Use admin@admin.com / 123456 for demo.",
+    "errorInvalid": "Invalid email or password. Use admin{'@'}admin.com / 123456 for demo.",
     "backHome": "← Back to home",
     "navHome": "Home",
     "navContact": "Contact",
